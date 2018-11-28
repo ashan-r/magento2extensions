@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+/**
+*
+* Do not edit or add to this file if you wish to upgrade the module to newer
+* versions in the future. If you wish to customize the module for your
+* needs please contact us to https://www.milople.com/contact-us.html
+*
+* @category    Ecommerce
+* @package     Milople_Recurringandsubscriptionpayments
+* @copyright   Copyright (c) 2017 Milople Technologies Pvt. Ltd. All Rights Reserved.
+* @url         https://www.milople.com/magento2-extensions/ecurring-and-subscription-payments-m2.html
+*
+**/
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Email:etc/email_templates.xsd">
+	<template id="recurringandsubscription_recurring_and_subscription_payments_order_confirmation_email_template" label="Recurring &amp; Subscription Payments Order Confirmation Email" file="subscription_payment_confirmation.html" type="html" module="Milople_Recurringandsubscriptionpayments" area="frontend"/>
+	<template id="recurringandsubscription_next_payments_reminder_email_template" label="Next Payments Reminder Email" file="upcoming_payment_reminder.html" type="html" module="Milople_Recurringandsubscriptionpayments" area="frontend"/>
+    <template id="recurringandsubscription_next_payments_confirmation_email_template" label="Payments Confirmation Email" file="next_payment_conformation.html" type="html" module="Milople_Recurringandsubscriptionpayments" area="frontend"/>
+	 <template id="recurringandsubscription_subscription_status_change_email_active_status_email_template" label="Active status Email" file="active_status.html" type="html" module="Milople_Recurringandsubscriptionpayments" area="frontend"/>
+	 <template id="recurringandsubscription_subscription_status_change_email_suspend_status_email_template" label="Suspend status Email" file="suspend_status.html" type="html" module="Milople_Recurringandsubscriptionpayments" area="frontend"/>
+	 <template id="recurringandsubscription_subscription_status_change_email_expire_status_email_template" label="Expire status Email" file="expire_status.html" type="html" module="Milople_Recurringandsubscriptionpayments" area="frontend"/>
+	 <template id="recurringandsubscription_subscription_status_change_email_cancel_status_email_template" label="Cancel status Email" file="cancel_status.html" type="html" module="Milople_Recurringandsubscriptionpayments" area="frontend"/>    
+    <template id="recurringandsubscription_expire_reminder_email_template" label="Subcscription Expiry Reminder" file="expiry_reminder.html" type="html" module="Milople_Recurringandsubscriptionpayments" area="frontend"/>
+</config>

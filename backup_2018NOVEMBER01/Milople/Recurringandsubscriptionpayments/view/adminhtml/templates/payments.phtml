@@ -1,0 +1,52 @@
+<?php
+/**
+*
+* Do not edit or add to this file if you wish to upgrade the module to newer
+* versions in the future. If you wish to customize the module for your
+* needs please contact us to https://www.milople.com/contact-us.html
+*
+* @category    Ecommerce
+* @package     Milople_Recurringandsubscriptionpayments
+* @copyright   Copyright (c) 2017 Milople Technologies Pvt. Ltd. All Rights Reserved.
+* @url         https://www.milople.com/magento2-extensions/recurring-and-subscription-payments-m2.html
+*
+**/
+?>
+
+<?php 
+$terms = $this->getTerm();
+$order = $this->getOrder();
+$plan =  $this->getPlan(); 
+?>
+<section class="admin__page-section">
+	<div class="admin__table-wrapper">
+		<table class="data-table admin__table-primary edit-order-table">
+			<thead>
+				<tr>
+					<th><?php echo __('Payment Date') ?></th>
+					<th><?php echo __('Order ID') ?></th>
+					<th><?php echo __('Order Status') ?></th>
+					<th><?php echo __('Order Amount') ?></th>
+					<th><?php echo __('Transaction Status') ?></th>
+				</tr>
+			</thead>
+			<?php foreach ($this->getCollection() as $Item): ?>
+          <tr>    
+						<td><?php echo date("m/d/y" ,strtotime($Item->getDate()));?></td>
+						<td>
+							<a href="<?php echo $block->getUrl('sales/order/view', array('order_id' => $Item->getOrder()->getId()))?>">
+								<?php echo $Item->getOrder()->getRealOrderId();?>
+							</a>
+						</td>
+						<td><em><?php echo ($Item->getOrder()->getStatusLabel()) ?></em></td>
+						<td class="a-right">
+						<?php $grandtotal = $Item->getOrder()->getGrandTotal();		 ?>
+						<?php if($grandtotal != 0):
+								echo  $Item->getOrder()->formatPrice($grandtotal);
+								 endif ;  ?></td>
+						<td> <?php echo $Item->getTransactionStatus();  ?>  </td>
+    			</tr>
+			<?php endforeach; ?>
+		</table>
+	</div>
+</section>

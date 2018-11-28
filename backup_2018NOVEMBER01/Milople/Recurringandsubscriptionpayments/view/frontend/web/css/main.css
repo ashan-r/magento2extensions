@@ -1,0 +1,239 @@
+/**
+*
+* Do not edit or add to this file if you wish to upgrade the module to newer
+* versions in the future. If you wish to customize the module for your
+* needs please contact us to https://www.milople.com/contact-us.html
+*
+* @category    Ecommerce
+* @package     Milople_Recurringandsubscriptionpayments
+* @copyright   Copyright (c) 2017 Milople Technologies Pvt. Ltd. All Rights Reserved.
+* @url         https://www.milople.com/magento2-extensions/ecurring-and-subscription-payments-m2.html
+*
+***/
+
+#recurring-help p
+{
+    padding:5px;
+}
+
+.subscription-start {
+    clear:both;
+    padding-left: 14px;
+}
+
+.subscription-start img {
+    display:inline;
+}
+
+.recurringandsubscriptionpayments-subscription a {
+    padding:3px 0 0 10px;
+    position:absolute;
+}
+.recurringandsubscriptionpayments-subscription.options-list
+{
+    list-style-type: none;
+    padding-left: 14px;
+}
+#my-subscription-table ul
+{
+    list-style-type: none;
+}
+.recurringandsubscriptionpayments-customer-view ol
+{
+    list-style-type: none;
+}
+
+/* Recurring Product Page Css Start*/
+.subscription {
+    background-color: #f4f4f4;
+    border: 1px solid #c5c5c5;
+    box-shadow: 0 1px 4px #006bb4;
+    color: #636363;
+    max-width: 100%;
+    min-height: 102px;
+    padding: 5px 5px 40px;
+    width: 450px;
+}
+.subscription:before, .subscription:after
+{
+    content:"";
+    position:absolute; 
+    z-index:-1;
+    box-shadow:0 0 20px rgba(0,0,0,0.8);
+    bottom:0;
+    left:10px;
+    right:10px;
+    border-radius:100px / 10px;
+}
+.subscription-label {
+    margin: 0 auto;
+    width: 95%;
+}
+.subscription h4 {
+    font-size: 16px;
+    color:#636363;
+}
+.subscription .info {
+    background: #fff none repeat scroll 0 0;
+    border: 1px solid #999999;
+    border-radius: 50%;
+    box-shadow: 2px 2px 1px #999999;
+    color: #999999;
+    float: right;
+    font-size: 12px;
+    line-height: 1;
+    padding: 3px 6px;
+    right: 12%;
+    text-decoration: none;
+    top: 25%;
+    width: auto;
+}
+#milople_select_subscription_type{
+    margin-left: 9%;
+    width: 43%;
+}
+.product-customer-login-notice{
+    display: block;
+}
+.input-text.required-entry._has-datepicker {
+    margin-left: 1.5px;
+    width: 43%;
+}
+.allow-subscription{
+    display: none;
+}
+/* Recurring Product Page Css End*/
+
+/*CSS PROPERTY FOR RADIO START*/
+.subscription-options {
+    clear: both;
+    margin: 0 auto;
+    padding-left: 0;
+    width: 95%;
+}
+.subscription-options > li:first-child {
+    border-right: medium none;
+}
+.subscription-options ._active {
+    background: #006bb4 none repeat scroll 0 0;
+    color: #ffffff;
+}
+.allow-subscription-radio > li {
+    border: 1px solid #c5c5c5;
+    float: left;
+    list-style: outside none none;
+    margin-bottom: 0;
+    padding: 4px 0;
+    position: relative;
+    text-align: center;
+    width: 49.5%;
+}
+label.allow-subscription-radio-label {
+    -moz-user-select: none;
+    background-image: url("../images/radio.png");
+    float: left;
+}
+.validation-error
+{
+    display:none;
+    bottom: -24px;
+    color: #ff0000;
+    left: 0;
+    position: absolute;
+    font-weight:normal;
+}
+input[aria-invalid="true"] + label .validation-error{
+    display:block;
+}
+input.allow-subscription-radio[type="radio"] {
+    border: 0 none;
+    clip: rect(0px, 0px, 0px, 0px);
+    float: left;
+    height: 1px;
+    left: -1000px;
+    margin: -1px;
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+    width: 1px;
+    z-index: -1000;
+}
+input.allow-subscription-radio[type="radio"]:checked + label.allow-subscription-radio-label, input.allow-subscription-radio[type="radio"]:hover + label.allow-subscription-radio-label {
+    background-position: 15% -27px;
+    font-weight: 600;
+}
+input.allow-subscription-radio[type="radio"] + label.allow-subscription-radio-label {
+    background-position: 15% 0;
+    background-repeat: no-repeat;
+    cursor: pointer;
+    display: inline-block;
+    height: 27px;
+    line-height: 27px;
+    vertical-align: middle;
+    width: 100%;
+    padding-left: 5px;
+}
+.subscription-options ._active {
+    background: #006bb4 none repeat scroll 0 0;
+    color: #ffffff;
+}
+.subscription-options > li {
+    border: 1px solid #c5c5c5;
+    float: left;
+    list-style: outside none none;
+    margin-bottom: 0;
+    padding: 4px 0;
+    position: relative;
+    text-align: center;
+    width: 49.5%;
+}
+#ajax-load {
+    display: none;
+}
+.allow-subscription-options {
+    background: white none repeat scroll 0 0;
+    clear: left;
+    display: none;
+    height: auto;
+    margin-left: 12px;
+    margin-right: 14px;
+    padding-bottom: 22px;
+    padding-top: 37px;
+    position: relative;
+}
+/*CSS PROPERTY FOR RADIO END*/
+/*rotate refresh*/
+.rotate-me
+{
+    width:14px;
+    color:#0000ff;
+    font-size:30px;
+    overflow:hidden;
+    height:14px;
+    font-style:normal;
+    animation-name:first;
+    animation-duration:2s;
+    animation-iteration-count: infinite; 
+    transform: rotate(0deg);
+    -webkit-transition-timing-function: linear;
+}
+@keyframes first{
+    0%{transform: rotate(0deg);} 
+    100%{ transform: rotate(500deg);}
+}
+#recurring-help p {
+    background: #fff url("../images/bullet.png") no-repeat scroll 0 5px;
+    float: left;
+    font-size: 13px;
+    margin-bottom: 0;
+    margin-left: 12px;
+    padding: 0 33px 12px 19px;
+    text-align: left;
+    width: 83%;
+}
+.subscription > div#recurring-help {
+    height: 99px;
+}
+.ui-datepicker-trigger {
+    margin: -4px 3px 0 !important;
+}

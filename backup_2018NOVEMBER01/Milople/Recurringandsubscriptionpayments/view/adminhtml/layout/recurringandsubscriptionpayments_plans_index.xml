@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<!--
+/**
+*
+* Do not edit or add to this file if you wish to upgrade the module to newer
+* versions in the future. If you wish to customize the module for your
+* needs please contact us to https://www.milople.com/contact-us.html
+*
+* @category    Ecommerce
+* @package     Milople_Recurringandsubscriptionpayments
+* @copyright   Copyright (c) 2017 Milople Technologies Pvt. Ltd. All Rights Reserved.
+* @url         https://www.milople.com/magento2-extensions/ecurring-and-subscription-payments-m2.html
+*
+**/
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+      <css src="Milople_Recurringandsubscriptionpayments::css/grid_style.css" />
+    </head>
+    <body>
+        <referenceContainer name="content">
+            <block class="Milople\Recurringandsubscriptionpayments\Block\Adminhtml\Plans" name="recurringandsubscription_plans"/>
+        </referenceContainer>
+        <referenceContainer name="admin.grid.grid.view">
+            <block class="Magento\Framework\View\Element\Text\ListText" name="grid.bottom.links">
+                <block class="Magento\Catalog\Block\Adminhtml\Rss\Grid\Link" name="grid.rss.link"/>
+            </block>
+        </referenceContainer>
+    </body>
+</page>
+

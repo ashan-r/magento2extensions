@@ -1,0 +1,122 @@
+<?php
+/**
+*
+* Do not edit or add to this file if you wish to upgrade the module to newer
+* versions in the future. If you wish to customize the module for your
+* needs please contact us to https://www.milople.com/contact-us.html
+*
+* @category    Ecommerce
+* @package     Milople_Recurringandsubscriptionpayments
+* @copyright   Copyright (c) 2017 Milople Technologies Pvt. Ltd. All Rights Reserved.
+* @url         https://www.milople.com/magento2-extensions/ecurring-and-subscription-payments-m2.html
+*
+**/
+$collection = $this->getCollection();
+$currenct_customer = $this->getCustomer()->getId();
+?>
+<?php 
+if($currenct_customer): ?>
+<div class="page-head">
+    <h3><?php echo $this->getTitle()?></h3>
+</div>
+<?php if ($this->getCollection()->count()): ?>
+ <div class="table-wrapper orders-history">
+        <table class="data table" id="my-subscription-table">
+            <caption class="table-caption"><?php /* @escapeNotVerified */ echo __('Orders') ?></caption>
+            <thead>
+                <tr>
+                    <th><?php /* @escapeNotVerified */ echo __('Order ID') ?></th>
+                    <th><?php /* @escapeNotVerified */ echo __('Product(S)') ?></th>
+                    <th><?php /* @escapeNotVerified */ echo __('Term') ?></th>
+                    <th><?php /* @escapeNotVerified */ echo __('Amount') ?></th>
+                    <th><?php /* @escapeNotVerified */ echo __('Upcoming payment') ?></th>
+										<th><?php /* @escapeNotVerified */ echo __('Expiry Date') ?></th>
+										<th><?php /* @escapeNotVerified */ echo __('Status') ?></th>
+                    <th>&nbsp;</th>
+                </tr>
+            </thead>
+				<tbody>
+            <?php foreach ($this->getCollection() as $subscription): ?>
+       			<tr>
+					<td> 
+						<?php $collection =$this->item
+						->getCollection()
+						->addFieldToFilter('subscription_id',$subscription->getId())
+						->getFirstItem(); 
+						$order_id = $this->order->load($collection->getPrimaryOrderId(),'increment_id')->getId();  ?>
+						<a href="<?php echo $block->getUrl('sales/order/view', array('order_id' => $order_id))?>"><?php echo $collection->getPrimaryOrderId(); ?> </a> 
+					</td>
+					<td>
+						<ul>
+							<?php foreach ($subscription->getItems() as $Item): ?>
+							<li>
+								<?php  if ($Item->getOrderItem()->getParentItemId()):
+											continue ;
+										else :  ?>
+											<a href="<?php echo $block->getUrl('catalog/product/view', array('id' => $Item->getOrderItem()->getProductId()))?>"><?php echo $Item->getOrderItem()->getName()?></a>
+											(<?php echo (int)$Item->getOrderItem()->getQtyOrdered()?>)
+										<?php endif;  ?>
+							</li>
+							<?php endforeach; ?>
+						</ul>
+           			</td>
+					<td><?php echo $this->gettermlabel($subscription->getTermType());?></td>
+					<td>
+                		<ul>
+						<?php if ($subscription->getLastOrder()->getId() == $subscription->getOrder()->getId()): ?>
+						<?php foreach ($subscription->getItems() as $subItem): ?>
+							<?php 
+								$Item = $subItem->getOrderItem();
+								if($Item->getParentItemId()):
+									continue;
+								else:
+							 ?>
+							<li>
+								<?php echo $subscription->getLastOrder()->formatPrice($Item->getPrice())?>
+							</li>
+						  <?php  endif;  ?>
+							<?php endforeach; ?>
+						<?php else: ?>
+						<?php foreach ($subscription->getLastOrder()->getItemsCollection() as $Item): ?>
+							<?php if ($Item->getParentItemId()) continue; ?>
+							<li>
+								<?php  echo $subscription->getLastOrder()->formatPrice($Item->getPrice())?> 
+							</li>
+							<?php endforeach; ?>
+						<?php endif ?>
+                	</ul>
+            	  </td>
+				  <td> <?php echo __(date("m/d/Y" ,strtotime($subscription->getNextPaymentDate())));  ?> </td>
+            	  <td> <?php
+					 if ($subscription->isInfinite()) 
+						echo __('-');
+					 else
+					   echo __(date("m/d/Y" ,strtotime($subscription->getDateExpire()))); ?>
+			  	  </td>
+            	  <td><?php echo $this->getsubscriptionStatusLabel($subscription) ?></td>
+				  <td class="last a-center">
+                <a href="<?php echo $block->getUrl('*/*/view', array('id' => $subscription->getId()))?>" style="text-transform:none;"><?php echo __('Edit') ?></a>
+                <br/>
+                <a href="<?php echo $block->getUrl('*/*/payments', array('id' => $subscription->getId()))?>" style="text-transform:none;"><?php echo __('Payments') ?></a>
+            </td>
+				</tr>
+				<?php endforeach; ?>
+			</tbody>
+	 </table>
+</div>
+	  <?php if ($block->getPagerHtml()): ?>
+			<div class="order-products-toolbar toolbar bottom"><?php echo $block->getPagerHtml(); ?></div>
+		<?php endif; ?>
+<?php else: ?>
+    <div class="message info empty"><span><?php /* @escapeNotVerified */ echo __('You have no subscriptions.'); ?></span></div>
+<?php endif ?>
+<?php else:  ?>
+	<script>
+	require([
+		"jquery",
+		"mage/mage"
+	], function($){
+			$($.mage.redirect("<?php /* @escapeNotVerified */ echo $block->getUrl('customer/account/login'); ?>", "assign",0));
+	});
+	</script>
+<?php endif;?>

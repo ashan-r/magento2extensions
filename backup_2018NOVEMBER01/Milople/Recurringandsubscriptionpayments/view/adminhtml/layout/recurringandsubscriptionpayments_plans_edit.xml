@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<!--
+/**
+*
+* Do not edit or add to this file if you wish to upgrade the module to newer
+* versions in the future. If you wish to customize the module for your
+* needs please contact us to https://www.milople.com/contact-us.html
+*
+* @category    Ecommerce
+* @package     Milople_Recurringandsubscriptionpayments
+* @copyright   Copyright (c) 2017 Milople Technologies Pvt. Ltd. All Rights Reserved.
+* @url         https://www.milople.com/magento2-extensions/ecurring-and-subscription-payments-m2.html
+*
+**/
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="admin-2columns-left" xsi:noNamespaceSchemaLocation="../../../../../../../lib/internal/Magento/Framework/View/Layout/etc/page_configuration.xsd">
+    <head>
+        <css src="jquery/fileUploader/css/jquery.fileupload-ui.css"/>
+				<css src="Milople_Recurringandsubscriptionpayments::css/grid_style.css" />
+    </head>
+    <update handle="editor"/>
+    <body>
+        <referenceContainer name="content">
+            <block class="Milople\Recurringandsubscriptionpayments\Block\Adminhtml\Plans\Edit" name="recurringandsubscriptionpayments_plans_edit"/>
+        </referenceContainer>   
+        <referenceContainer name="left">
+					<block class="Milople\Recurringandsubscriptionpayments\Block\Adminhtml\Plans\Edit\Tabs" name="recurringandsubscriptionpayments_plans_edit_tabs">
+							<block class="Milople\Recurringandsubscriptionpayments\Block\Adminhtml\Plans\Edit\Tab\Planinfo" name="recurringandsubscriptionpayments_plans_edit_tab_planinfo"/>
+							<block class="Milople\Recurringandsubscriptionpayments\Block\Adminhtml\Plans\Edit\Tab\Terms" name="recurringandsubscriptionpayments_plans_edit_tab_terms"/>
+							<block class="Milople\Recurringandsubscriptionpayments\Block\Adminhtml\Plans\Edit\Tab\Grid" name="recurringandsubscriptionpayments_plans_edit_tab_grid"/>
+							<action method="addTab">
+								 <argument name="name" xsi:type="string">main_section</argument>
+								 <argument name="block" xsi:type="string">recurringandsubscriptionpayments_plans_edit_tab_planinfo</argument>
+							</action>		
+							<action method="addTab">
+									<argument name="name" xsi:type="string">term_section</argument>
+									<argument name="block" xsi:type="string">recurringandsubscriptionpayments_plans_edit_tab_terms</argument>
+							</action>
+							<action method="addTab">
+									<argument name="name" xsi:type="string">plan_products_section</argument>
+									<argument name="block" xsi:type="string">recurringandsubscriptionpayments_plans_edit_tab_grid</argument>
+							</action> 
+					 </block>
+       </referenceContainer>
+    </body>
+</page>
+
+
+

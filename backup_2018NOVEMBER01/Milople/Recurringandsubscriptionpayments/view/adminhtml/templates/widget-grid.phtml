@@ -1,0 +1,103 @@
+<?php
+/**
+*
+* Do not edit or add to this file if you wish to upgrade the module to newer
+* versions in the future. If you wish to customize the module for your
+* needs please contact us to https://www.milople.com/contact-us.html
+*
+* @category    Ecommerce
+* @package     Milople_Recurringandsubscriptionpayments
+* @copyright   Copyright (c) 2017 Milople Technologies Pvt. Ltd. All Rights Reserved.
+* @url         https://www.milople.com/magento2-extensions/ecurring-and-subscription-payments-m2.html
+*
+**/
+?>
+<?php
+$edit_plan_id = $this->getRequest()->getParam('plan_id');
+{?>
+
+<div style="margin-bottom:8px;">
+    <big><?php echo __('Assign Products to Plan By:') ?></big>&nbsp;&nbsp;           
+    <label><input type="radio" name="products_area_type" value="1" checked onclick="assignBy(this.value)" /> <?php echo __('Selection from Grid') ?></label>&nbsp;&nbsp;
+    <label><input type="radio" name="products_area_type" value="2" onclick="assignBy(this.value)" /> <?php echo __('IDs') ?></label>&nbsp;&nbsp;
+    <label><input type="radio" name="products_area_type" value="3" onclick="assignBy(this.value)" /> <?php echo __('SKUs') ?></label>        
+</div>
+<script type="text/javascript">
+//<![CDATA[   
+    function assignBy(type) {
+        if (type==1) {
+            $('product_grid').show();
+            $('product_area').hide();
+			$('product_area_sku').hide();
+        } else {
+            if (type==2) 
+			{
+				$('example_area').innerHTML = '101,102,103,104,105'; 
+				$('product_area').show();
+				$('product_grid').hide();
+				$('product_area_sku').hide();
+           		
+			}
+			else 
+            {
+				$('example_area').innerHTML = 'MM-A900M,VGN-TXN27N/B,QC-2185,C530';
+				$('product_area_sku').show();
+				$('product_grid').hide();
+				$('product_area').hide();
+			}
+        }
+    }          
+//]]>
+</script>
+<div id="product_area" style="display:none">
+<?php 
+
+		$plan_id =  $edit_plan_id ;
+		$items = array();
+		if(isset($plan_id))   // If already any plan is created
+		{
+			$product_ids = $this->getPlansProducts();
+			foreach ($product_ids as $product_id)
+			{
+				$items[] = $product_id['product_id'];	
+			}
+				$data = implode(',', $items);
+		}else
+		{
+			$data = '';
+		}   
+ ?>
+ <textarea name="products_area" cols="150" rows="7" ><?php echo $data; ?></textarea>
+ <p><small><?php echo __('Example:') ?> <span id="example_area">101,102,103,104,105</span></small></p>
+  
+</div>
+<div id="product_area_sku" style="display:none">
+<?php 
+		$plan_id =  $edit_plan_id ;
+		$sku = array();
+		if(isset($plan_id))   // If already any plan is created
+		{
+			$product_ids = $this->getPlansProducts();
+			foreach($product_ids as $id)
+			{
+				$productData = $this->product->load(trim($id['product_id']));
+				$sku[] = $productData['sku'];
+			}
+			$data = implode(',', $sku);
+		}
+		else
+		{
+			$data = '' ;	
+		}
+?>
+    <textarea name="products_area_sku" cols="150" rows="7" ><?php echo $data; ?></textarea>
+    <p><small><?php echo __('Example:') ?> <span id="example_area">MM-A900M,VGN-TXN27N/B,QC-2185,C530</span></small></p>
+</div>
+<?php }  ?>
+<div id="product_grid">
+<?php
+$block->getCollection();?>
+<?php echo $block->getChildHtml('grid') ?>
+</div>
+
+	

@@ -1,0 +1,69 @@
+<?php
+/**
+*
+* Do not edit or add to this file if you wish to upgrade the module to newer
+* versions in the future. If you wish to customize the module for your
+* needs please contact us to https://www.milople.com/contact-us.html
+*
+* @category    Ecommerce
+* @package     Milople_Recurringandsubscriptionpayments
+* @copyright   Copyright (c) 2017 Milople Technologies Pvt. Ltd. All Rights Reserved.
+* @url         https://www.milople.com/magento2-extensions/ecurring-and-subscription-payments-m2.html
+*
+**/
+
+$_product = $this->getProduct() ;
+$plans_product = $this->getPlanProducts()->load($_product->getId(),'product_id');
+$plans = $this->getPlan()->getCollection()->addFieldToFilter('plan_id',$plans_product->getPlanId());
+$isavailable =   $this->recurring_helper->isAvailableTo();
+$planStatus= $this->recurring_helper->getTempPlanStatus($plans);
+$customer_group =  $this->recurring_helper->allowedToSpecificCustomerGroups();
+$_loggedIn =$this->isRegisteredCustomer();
+$groupId = 0;
+if($_loggedIn)
+{
+	$groupId = $this->session->getCustomer()->getGroupId(); 
+}
+
+if (!$this->helper->canRun()) {
+	echo $this->helper->getMessage();
+}
+else if($this->recurring_helper->isEnabled())
+{
+
+	if ($this->hasSubscriptionOptions()){
+	
+		//if ($this->session->isLoggedIn() || $isavailable == 1 || $isavailable == 3){	
+		if ($_loggedIn || $isavailable == 1 || $isavailable == 3){	
+			
+			echo $this->getLayout()->createBlock("Milople\Recurringandsubscriptionpayments\Block\Product\View\Recurringoptions")->setTemplate("Milople_Recurringandsubscriptionpayments::product/view/subscription_options.phtml")->toHtml();
+						if ($this->getDisplayCalendar($_product->getId())==1){ ?>
+						<div class="subscription-start">
+							<?php echo __('Subscription Starts From')?>
+							<?php echo $this->getCalendarHtml(); ?>
+
+						</div>
+						<?php }else{ ?>
+							 <input type="hidden" name="milople_subscription_start_date"
+											 value="<?php echo $this->localeDate->formatdate($this->localeDate->date(),\IntlDateFormatter::LONG); ?>"/>
+						<?php }	?>
+       			<?php if(($isavailable ==1 ||( ($isavailable ==2 )&& $_loggedIn) ||($isavailable == 3  && in_array($groupId,$customer_group))) && $planStatus==1): ?>
+							 </div>
+							</section>
+						<?php endif; ?>
+				
+		<?php }else{ ?>
+
+			 <strong class="product-customer-login-notice"> 
+				<?php echo __("You can also buy this product using subscription but in this case you should")?>
+				<a href="<?php echo $this->_urlInterface->getUrl('customer/account/create')?>"><?php echo __('create an account')?></a>
+				<?php echo __('or')?>
+				<a href="<?php echo $this->_urlInterface->getUrl('customer/account/login')?>"><?php echo __('log in')?></a>.
+			</strong>
+	<?php 	 } //Check Login and Available to all
+	} // It has subscription Options
+}// Recurring is Enabled
+?>	
+	
+	<input type="hidden" id="milople_subscription_type" name="milople_subscription_type" value="-1"  />
+	<input type="hidden" id="milople_subscription_type_label" name="milople_subscription_type_label" value=""/>	

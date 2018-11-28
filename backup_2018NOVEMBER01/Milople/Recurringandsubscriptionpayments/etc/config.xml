@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+/**
+*
+* Do not edit or add to this file if you wish to upgrade the module to newer
+* versions in the future. If you wish to customize the module for your
+* needs please contact us to https://www.milople.com/contact-us.html
+*
+* @category    Ecommerce
+* @package     Milople_Recurringandsubscriptionpayments
+* @copyright   Copyright (c) 2017 Milople Technologies Pvt. Ltd. All Rights Reserved.
+* @url         https://www.milople.com/magento2-extensions/ecurring-and-subscription-payments-m2.html
+*
+**/
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+ <default>
+ 	<recurringandsubscription>
+      <license_status_group>
+					<status>2</status>
+			</license_status_group>
+			<general_group>
+					<displayrnr>1</displayrnr>
+					<activate_order_status>processing</activate_order_status>
+					<availableto>2</availableto>
+			</general_group>
+			<recurring_and_subscription_payments_order_confirmation_email>
+					<send_order_confirmation_email>1</send_order_confirmation_email>
+					<template>recurringandsubscription_recurring_and_subscription_payments_order_confirmation_email_template</template>
+					<sender>general</sender>
+			</recurring_and_subscription_payments_order_confirmation_email>
+			<next_payments_reminder_email>
+					<send_next_payments_reminder_email>1</send_next_payments_reminder_email>
+					<reminder_before_next_payments>0</reminder_before_next_payments>
+					<template>recurringandsubscription_next_payments_reminder_email_template</template>
+					<sender>general</sender>
+			</next_payments_reminder_email>
+			<next_payments_confirmation_email>
+					<send_next_payments_confirmation_email>1</send_next_payments_confirmation_email>
+					<template>recurringandsubscription_next_payments_confirmation_email_template</template>
+					<sender>general</sender>
+			</next_payments_confirmation_email>
+			<subscription_status_change_email>
+					<active_status_email_template>recurringandsubscription_subscription_status_change_email_active_status_email_template</active_status_email_template>
+					<suspend_status_email_template>recurringandsubscription_subscription_status_change_email_suspend_status_email_template</suspend_status_email_template>
+					<cancel_status_email_template>recurringandsubscription_subscription_status_change_email_cancel_status_email_template</cancel_status_email_template>
+					<expire_status_email_template>recurringandsubscription_subscription_status_change_email_expire_status_email_template</expire_status_email_template>  
+					<sender>general</sender>
+			</subscription_status_change_email>
+			<expire_reminder_email>
+					<send_expire_reminder_email>1</send_expire_reminder_email>
+					<reminder_before_expire>0</reminder_before_expire>
+					<template>recurringandsubscription_expire_reminder_email_template</template>
+					<sender>general</sender>
+			</expire_reminder_email>
+		</recurringandsubscription>
+	
+ </default>
+</config>

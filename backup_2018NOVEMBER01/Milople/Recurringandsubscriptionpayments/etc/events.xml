@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+/**
+*
+* Do not edit or add to this file if you wish to upgrade the module to newer
+* versions in the future. If you wish to customize the module for your
+* needs please contact us to https://www.milople.com/contact-us.html
+*
+* @category    Ecommerce
+* @package     Milople_Recurringandsubscriptionpayments
+* @copyright   Copyright (c) 2017 Milople Technologies Pvt. Ltd. All Rights Reserved.
+* @url         https://www.milople.com/magento2-extensions/ecurring-and-subscription-payments-m2.html
+*
+**/
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
+   <event name="checkout_cart_product_add_after">
+        <observer name="addtocart" instance="Milople\Recurringandsubscriptionpayments\Observer\Frontend\Addtocart"/>
+    </event>  
+		  <event name="checkout_cart_update_item_complete">
+			<observer name="cartupdatecomplete" instance="Milople\Recurringandsubscriptionpayments\Observer\Frontend\UpdateCart"/>
+    </event>
+	  <event name="payment_method_is_active">
+			<observer name="paymentidavailaable" instance="Milople\Recurringandsubscriptionpayments\Observer\Frontend\PaymentIsAvailable"/>
+    </event>
+		<!-- For Paypal Express -->
+	 <event name="paypal_express_place_order_success"> 
+			<observer name="milople_recurringandsubscriptionpayments_paypalexpress" instance="Milople\Recurringandsubscriptionpayments\Observer\Frontend\Paypalexpresscheckout"/>
+    </event>  
+		<event name="checkout_submit_all_after">
+			<observer name="milople_recurringandsubscriptionpayments_assignsubscription" instance="Milople\Recurringandsubscriptionpayments\Observer\Frontend\AssignSubscriptionToCustomer"/>
+    </event> 
+    <event name="catalog_product_load_after">
+        <observer name="set_additional_options" instance="Milople\Recurringandsubscriptionpayments\Observer\Frontend\SetAdditionalOptions"/>
+    </event>
+		<event name="sales_order_save_after">
+ 	       <observer name="orderstatuschange" instance="Milople\Recurringandsubscriptionpayments\Observer\Admin\Orderstatus"/>
+    </event>
+		<!-- admin events -->
+	<event name="adminhtml_sales_order_create_process_data_before">
+			<observer name="adminhtml_sales_order_create_process_data_before" instance="Milople\Recurringandsubscriptionpayments\Observer\Admin\SalesOrderCreateProcessDataBefore"/>
+  </event> 
+</config>

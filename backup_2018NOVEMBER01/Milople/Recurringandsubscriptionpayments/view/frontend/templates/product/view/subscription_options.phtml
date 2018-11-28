@@ -1,0 +1,122 @@
+<?php
+/**
+*
+* Do not edit or add to this file if you wish to upgrade the module to newer
+* versions in the future. If you wish to customize the module for your
+* needs please contact us to https://www.milople.com/contact-us.html
+*
+* @category    Ecommerce
+* @package     Milople_Recurringandsubscriptionpayments
+* @copyright   Copyright (c) 2017 Milople Technologies Pvt. Ltd. All Rights Reserved.
+* @url         https://www.milople.com/magento2-extensions/ecurring-and-subscription-payments-m2.html
+*
+**/
+ ?>
+<?php
+$helper = $this->helper;
+$recurring_helper = $this->recurring_helper;
+$datetime = $this->localeDate;
+$controller = $block->getRequest()->getControllerName();
+$subscription_type = '' ;
+$_product =$this->getProduct();
+$symbol =$this->_currency->getCurrencySymbol();
+$plans_product = $this->getPlanProducts()->load($_product->getId(),'product_id');
+$plans = $this->getPlan()->getCollection()->addFieldToFilter('plan_id',$plans_product->getPlanId());
+//$_loggedIn =$this->session->isLoggedIn();
+$_loggedIn =$this->isRegisteredCustomer();
+$dateToFormat = $datetime->date();
+$subscription_start_date =  date_format($dateToFormat,"m/d/Y");
+if($controller=='cart')  // Update product page
+ {
+	  $quote = $this->cart->getQuote()->getAllVisibleItems();	
+	  $url_value = $this->getRequest()->getParams();
+	  $item_id_pass = $url_value['id'];
+	  foreach ($quote as $item) 
+	  {
+		 if($item_id_pass == $item->getItemId())
+		 {
+			 $infoBuyRequest = $item->getOptionByCode('info_buyRequest');
+			 $buyRequest = new \Magento\Framework\DataObject($this->helper->getUnserializeData($infoBuyRequest->getValue()));	
+			 $subscription_type = $buyRequest->getMilopleSubscriptionType();
+			 $subscription_start_date = $buyRequest->getMilopleSubscriptionStartDate();
+		 }
+	  }
+ }
+$isavailable = $recurring_helper->isAvailableTo();
+$customer_group = $recurring_helper->allowedToSpecificCustomerGroups();
+$groupId = 0;
+if($_loggedIn)
+{
+	$groupId = $this->session->getCustomer()->getGroupId(); 
+}
+if ($helper->canRun()) 
+{
+	if($recurring_helper->isEnabled())
+	{	
+		if ($plans->count()>0):
+			$planid = 0;
+			foreach($plans as $plan)
+			{
+				$planid=$plan->getPlanId();
+				$isnormal=$plan->getIsNormal();
+			}
+			$planStatus=  $recurring_helper->getTempPlanStatus($plans);
+			$_planTemp  = $this->getPlan()->load($planid);
+			if(($isavailable ==1 ||( ($isavailable ==2 )&& $_loggedIn) ||($isavailable == 3  && in_array($groupId,$customer_group))) && $_planTemp->getPlanStatus()==1): 
+			?>
+			
+			<section class="subscription">
+					<div class="subscription-label">
+						<h4><?php echo __('This product is available with') ?>
+							<strong><?php echo $recurring_helper->getBrandLabel(); ?></strong>
+						</h4>
+					</div>
+					<?php  if($isnormal==1): ?>
+					<ul class="subscription-options"> 
+						<li id="nosubscription"> 
+							<input type="radio" value="0" onclick = "fullsubscriptionChecked(1)" checked='checked' name="subscription" class="allow-subscription-radio" id="nosubcription-radio" data-validate="{'validate-one-required-by-name':true}" />
+							<label for="nosubcription-radio" class="allow-subscription-radio-label"><?php echo __('No Subscription') ?><label class="validation-error"><?php echo __('Please Selection One Option') ?></label></label>
+						</li>
+						<li id="subscription" data-url='<?php echo $this->_urlInterface->getUrl('recurringandsubscriptionpayments/helptooltip')  ?>'>
+							<input type="radio" value="1" onclick = "fullsubscriptionChecked(0)" name="subscription" class="allow-subscription-radio" id="subscription-radio"/>
+							<label for="subscription-radio" class="allow-subscription-radio-label"><?php echo __('Subscription') ?> <img id="ajax-load" src="<?php echo $this->getViewFileUrl('Milople_Recurringandsubscriptionpayments::images/refresh-white.png'); ?>" /></label>
+						</li>
+					</ul>
+					<?php else: ?>
+						<p id="subscription" data-url='<?php echo $this->_urlInterface->getUrl('recurringandsubscriptionpayments/helptooltip')  ?>' style="visibility: hidden;"></p>
+					<?php endif; ?>
+					<div id="allow-subscription-options"	
+					class="allow-subscription-options">
+						<ul class="recurringandsubscriptionpayments-subscription options-list">
+							<?php echo __('Subscription Type ') ?>
+								<select name="milople_select_subscription_type" id='milople_select_subscription_type' data-url='<?php echo $this->_urlInterface->getUrl('recurringandsubscriptionpayments/helptooltip')  ?>'>
+									<?php $type = $this->getTerms()->getCollection()
+										->addFieldToFilter('plan_id',$planid);?>
+									 <?php foreach ($type as $item): ?>
+										<option value="<?php echo $item->getId()?>" <?php echo $subscription_type == $item->getId() ?'selected="selected"':''?> ><?php echo $item->getLabel() ?></option>
+									<?php endforeach; ?>
+								</select>
+								<a style="display:none;" href="javascript:void(0)" id="info" class="info" data-url='<?php echo $this->_urlInterface->getUrl('recurringandsubscriptionpayments/helptooltip')  ?>'>?</a>  
+						</ul>
+			<?php endif; // Check availability and logging IF?>
+		<?php endif; //Plan > 0
+	} // Recurring Enabled IF
+} // Can RuN IF  ?>
+<input type="hidden" id='product_type' name='product_type' value='<?php echo $_product->getTypeId() ?>'  />
+<input type="hidden" id='product_price' name='product_price' value='<?php echo $_product->getPrice() ?>'  />
+<input type="hidden" id='symbol' name='symbol' value='<?php echo $symbol ?>' />
+<script>
+	// Assign date to date picker on load
+	require(["jquery"], function(jQuery) {
+		jQuery(document).ready(function(){
+		  var start_date='<?php echo $subscription_start_date ; ?>';
+			if(jQuery('#milople_subscription_start_date').length>0){
+		 	document.getElementById("milople_subscription_start_date").value = start_date;
+			}
+		  <?php if($isnormal==0): ?>
+			fullsubscriptionChecked(0);
+				jQuery("#subscription").trigger("click");
+			<?php endif; ?>
+		});	
+	});
+</script>

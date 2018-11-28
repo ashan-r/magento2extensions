@@ -1,0 +1,932 @@
+<!--
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_UvDeskConnector
+ * @author    Webkul Software Private Limited
+ * @copyright Copyright (c) 2010-2017 Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+-->
+<?php
+$tickets = $block->getAllTicketsAccToLabel();
+$baseUvdesAdminUrl = $this->getUrl('uvdeskcon/tickets/index');
+if(!array_key_exists('error', $tickets)) {
+    $lastPage = $tickets['pagination']['last'];
+    $startPage = $tickets['pagination']['startPage'];
+    $endPage = $tickets['pagination']['endPage'];
+    $totalCount = $tickets['pagination']['totalCount'];
+    $selectedLabel = $block->labelParamater();
+} else if(array_key_exists('error', $tickets)) {
+    $errorMessage = $block->getErrorMessage($tickets);
+}
+$labelParameter = $block->labelParamater();
+$agent          = $block->getFilterDataFor('agent');
+$customer       = $block->getFilterDataFor('customer');
+$group          = $block->getFilterDataFor('group');
+$mailbox        = $block->getFilterDataFor('mailbox');
+$priority       = $block->getFilterDataFor('priority');
+$team           = $block->getFilterDataFor('team');
+$type           = $block->getFilterDataFor('type');
+$tag            = $block->getFilterDataFor('tag');
+?>
+<div class="container-fluid">
+<div class="row-from-bootstrap">
+  <?php if(!array_key_exists('error', $tickets)) { ?>
+    <div class="col-md-3">
+        <div class="panel-group">
+            <div class="panel panel-default">
+              <div class="panel-heading"><h3 class="panel-title"><?php /* @escapeNotVerified */ echo __('Labels') ?></h3></div>
+              <div class="panel-body vertical-menu">
+                <?php foreach ($tickets['labels']['predefind'] as $key => $value) { ?>
+                    <a class="<?php echo $block->selectedLabelClass($key); ?>" href='<?php echo $block->getUrl("uvdeskcon/tickets/index/");echo 'labels/'.$key ;?>' id="<?php echo $key; ?>" style="font-weight:800;color: #333;text-decoration:none;"><?php echo ucfirst($key); ?> <span class="label label-success"><?php echo $value; ?></span></a>
+                <?php } ?>
+                <?php foreach ($tickets['labels']['custom'] as $key => $value) { ?>
+                    <a class="<?php echo $block->selectedLabelClass($value['id']); ?>" href='<?php echo $block->getUrl("uvdeskcon/tickets/index/");echo 'labelsId/'.$value['id'] ;?>' id="<?php echo $value['name']; ?>" style="font-weight:800;color: #333;text-decoration:none;"><?php echo ucfirst($value['name']); ?> <span class="label label-success"><?php echo $value['count']; ?></span></a>
+                <?php } ?>
+              </div>
+            </div>
+
+            <div class="panel panel-default">
+              <div class="panel-heading"><h3 class="panel-title"><?php /* @escapeNotVerified */ echo __('Filter Tickets') ?></h3></div>
+              <div class="panel-body" id="filters">
+                <div id="ticket-filters">
+                    <label for="filter-assigned" class="control-label">
+                        <span data-toggle="tooltip" title="" data-original-title="Enter Member name (Atleast 2 letters)">
+                            <?php /* @escapeNotVerified */ echo __('Assigned To') ?>
+                        </span>
+                    </label>
+                    <br>
+                    <div class="pos-relative" filter-type="agent">
+                        <i class="fa fa-spinner fa-spin" style="display: none;"></i>
+                        <input type="text" placeholder="Enter Member name (Atleast 2 letters)" class="form-control inputbox" id="filter-assigned"/>
+                    </div>
+                </div>
+                <div>
+                    <label for="filter-customer" class="control-label">
+                        <span data-toggle="tooltip" title="" data-original-title="Enter Customer name (Atleast 2 letters)">
+                            <?php /* @escapeNotVerified */ echo __('Customer') ?>
+                        </span>
+                    </label>
+                    <br>
+                    <div class="pos-relative" filter-type="customer">
+                         <!--<i class="fa fa-spinner fa-spin"></i> -->
+                        <input type="text" placeholder="Enter Customer name (Atleast 2 letters)" class="form-control inputbox" id="filter-customer">
+                    </div>
+                </div>
+                <div>
+                    <label for="filter-group"><?php /* @escapeNotVerified */ echo __('Group') ?></label>
+                    <br>
+                    <div class="pos-relative" filter-type="group">
+                         <!--<i class="fa fa-spinner fa-spin"></i> -->
+                        <input type="text" placeholder="Select Group" class="form-control inputbox" id="filter-group">
+                    </div>
+                </div>
+                <div>
+                    <label for="filter-team"><?php /* @escapeNotVerified */ echo __('Team') ?></label>
+                    <br>
+                    <div class="pos-relative" filter-type="team">
+                         <!--<i class="fa fa-spinner fa-spin"></i> -->
+                        <input type="text" placeholder="Select Team" class="form-control inputbox" id="filter-team">
+                    </div>
+                </div>
+                <div>
+                    <label for="filter-priority"><?php /* @escapeNotVerified */ echo __('Priority') ?></label>
+                    <br>
+                    <div class="pos-relative" filter-type="priority">
+                         <!--<i class="fa fa-spinner fa-spin"></i> -->
+                        <input type="text" placeholder="Select Priority" class="form-control inputbox" id="filter-priority">
+                    </div>
+                </div>
+                <div>
+                    <label for="filter-type"><?php /* @escapeNotVerified */ echo __('Type') ?></label>
+                    <br>
+                    <div class="pos-relative" filter-type="type">
+                         <!--<i class="fa fa-spinner fa-spin"></i> -->
+                        <input type="text" placeholder="Select Type" class="form-control inputbox" id="filter-type">
+                    </div>
+                </div>
+                <div>
+                    <label for="filter-tag" class="control-label"><span data-toggle="tooltip" title="" data-original-title="Enter Tag (Atleast 2 letters)"><?php /* @escapeNotVerified */ echo __('Tag') ?></span></label>
+                    <br>
+                    <div class="pos-relative" filter-type="tag">
+                         <!--<i class="fa fa-spinner fa-spin"></i> -->
+                        <input type="text" placeholder="Enter Tag (Atleast 2 letters)" class="form-control inputbox" id="filter-tag">
+                    </div>
+                </div>
+                <div>
+                    <label for="filter-mailbox"><?php /* @escapeNotVerified */ echo __('Mailbox') ?></label>
+                    <br>
+                    <div class="pos-relative" filter-type="mailbox">
+                         <!--<i class="fa fa-spinner fa-spin"></i> -->
+                        <input type="text" placeholder="Enter Mailbox" class="form-control inputbox" id="filter-mailbox">
+                    </div>
+                </div>
+              </div>
+            </div>
+        </div>
+    </div>
+    <div class="panel panel-default col-md-9">
+    <div class="panel-heading top-heading">
+        <h3 class="panel-title"><?php /* @escapeNotVerified */ echo __('Ticket List') ?></h3>
+         <div class="pull-right" style="margin-top:-3%;">
+          <button type="button" id="wk_delete_tickets" data-toggle="tooltip" title="" class="btn btn-danger"  data-original-title="Delete"><i class="fa fa-trash-o"></i></button>
+         </div>
+         <!--<div class="col-sm-4 pull-right" style="">
+          <div class="input-group">
+            <input type="text" name="search" id="search" value="" class="form-control" placeholder="Search tickets...">
+            <span class="input-group-addon btn" id="search-btn"><i class="fa fa-search"></i></span>
+          </div>
+         </div> -->
+    </div>
+    <div id="ticket-list" style="clear:both;">
+    <div class="panel-heading">
+    <div class="uvdesk_navbar btn-group width-100">
+        <?php foreach($tickets['status'] as $status) {   ?>
+                <a tab-id="<?php echo $status['id']; ?>" class="btn btn-default width-16">
+                <i class="<?php echo $block->getGlycophins($status['id']); ?>"></i>
+                    <span class="hidden-xs"><?php echo $status['name']; ?></span><br>
+                    <span class="label label-info"><?php echo $tickets['tabs'][$status['id']] ?></span>
+                </a>
+        <?php } ?>
+    </div>
+    </div>
+    <div class="panel-body">
+    <div class="table-responsive">
+    <table  class="table table-bordered table-hover" cellspacing="0" width="100%">
+        <thead>
+            <tr>
+                <th class="text-center"><input type="checkbox" id="check_all" name="selected[]" value=""></th>
+                <th class="text-center"><?php /* @escapeNotVerified */ echo __('Priority') ?></th>
+                <th class="text-center"><?php /* @escapeNotVerified */ echo __('Ticket') ?></th>
+                <th class="text-center"><?php /* @escapeNotVerified */ echo __('Customer Name') ?></th>
+                <th class="text-center"><?php /* @escapeNotVerified */ echo __('Subject') ?></th>
+                <th class="text-center"><?php /* @escapeNotVerified */ echo __('Created On') ?></th>
+                <th class="text-center"><?php /* @escapeNotVerified */ echo __('Replies') ?></th>
+                <th class="text-center"><?php /* @escapeNotVerified */ echo __('Agent') ?></th>
+                <th class="text-center"><?php /* @escapeNotVerified */ echo __('Action') ?></th>
+            </tr>
+        </thead>
+        <tbody id="ticket-body">
+           <?php if(!empty($tickets['tickets'])) { ?>
+            <?php foreach($tickets['tickets'] as $ticket) { ?>
+                <tr>
+                    <td class="text-center"><input type="checkbox" name="selected" value="<?php echo $ticket['id']?>"></td>
+                    <td class="text-center" style="color:<?php echo $ticket['priority']['color'] ; ?>; font-weight: bold;"><?php echo $ticket['priority']['name'] ;?></td>
+                    <td class="text-center"><?php /* @escapeNotVerified */ echo __('#') ?><?php echo $ticket['incrementId']?></td>
+                    <td class="text-center"><?php echo $ticket['customer']['name'] ?></td>
+                    <td class="text-center"><?php echo $ticket['subject'] ?></td>
+                    <td class="text-center"><?php echo $ticket['formatedCreatedAt'] ?></td>
+                    <td class="text-center"><label class="label label-info"><?php echo $ticket['totalThreads'] ?></label></td>
+                    <td class="" style="width: 20%;">
+                    <span class="badge agentButton" style="margin-left:37px;">
+                        <i class="fa fa-pencil"></i>
+                    </span>
+                    <span><?php echo $ticket['agent']['name'] ?></span>
+                    <div class="btn-group bootstrap-select">
+                        <!--<button type="button" class="btn dropdown-toggle btn-default" data-toggle="dropdown" role="button" title="Jeni doe" aria-expanded="true">
+                            <span class="filter-option pull-left">Jeni doe</span>&nbsp;<span class="bs-caret">
+                                <span class="caret">
+                                </span>
+                            </span>
+                        </button>-->
+                        <div class="dropdown-menu open" role="combobox" style="max-height: 199px; overflow: hidden; min-height: 43px;z-index:900;">
+                            <div class="bs-searchbox">
+                                <input class="agentSearchInput form-control" type="text" class="form-control" autocomplete="off" role="textbox" aria-label="Search" data-ticketid=
+                                    "<?php echo $ticket['id']?>">
+                            </div>
+                            <ul class="dropdown-menu inner"  role="listbox" aria-expanded="true" style="max-height: 144px; overflow-y: auto; min-height: 0px;">
+                            <?php foreach($agent['agent'] as $agentData) {?>
+                                <?php
+                                    $selected = "";
+                                    if($ticket['agent']['name'] == $agentData['name'] ){
+                                        $selected = "selected active";
+                                    }
+                                ?>
+                                <li  class="<?php echo $selected ; ?> agentLists">
+                                    <a tabindex="0" class="" data-tokens="null" role="option" aria-disabled="false" aria-selected="true" data-ticketid=
+                                    "<?php echo $ticket['id']?>" data-agentid="<?php echo $agentData['id'] ;?>">
+                                        <span class="text"><?php echo $agentData['name']; ?></span>
+                                        <span class="glyphicon glyphicon-ok check-mark"></span>
+                                    </a>
+                                </li>
+                                <?php $selected = ""; ?>
+                            <?php } ?>
+                            </ul>
+                        </div>
+                    </div>
+                    </td>
+                    <td class="text-center"><a href="<?php echo $block->getUrl('uvdeskcon/tickets/ticketthread').'id/'.$ticket['id'].'/increment_id/'.$ticket['incrementId'];?>" target="_blank" class="btn btn-info"><?php /* @escapeNotVerified */ echo __('View') ?></a></td>
+                </tr>
+            <?php } ?>
+            <?php } else { ?>
+                    <tr><td class="text-center" colspan="9"><?php /* @escapeNotVerified */ echo __('No tickets Found!') ?></td></tr>
+            <?php } ?>
+        </tbody>
+    </table>
+    <ul class="pagination">
+        <?php if($totalCount > 0 && ($startPage != $endPage)) {?>
+            <?php if (isset($tickets['pagination']['previous']) && $tickets['pagination']['previous']!=0) { ?>
+                <li class='pagination-list uvdpagination' data=<?php echo $tickets['pagination']['previous']; ?>><a href="#">&laquo</a></li>
+            <?php } ?>
+            <?php if ($tickets['pagination']['firstPageInRange']!=$tickets['pagination']['first']) {?>
+                <li class='pagination-list uvdpagination' data=<?php echo $tickets['pagination']['first']; ?>><a href="#"><?php echo $tickets['pagination']['first']; ?></a></li>
+                <li class='pagination-list uvdpagination'><a href="#">...</a></li>
+            <?php } ?>
+            <?php foreach($tickets['pagination']['pagesInRange'] as $page) {?>
+                <li class='pagination-list uvdpagination' data=<?php echo $page ; ?>><a href="#"><?php echo $page ; ?></a></li>
+            <?php } ?>
+            <?php if ($tickets['pagination']['lastPageInRange']!=$tickets['pagination']['last']) {?>
+                <li class='pagination-list uvdpagination'><a href="#">...</a></li>
+                <li class='pagination-list uvdpagination' data=<?php echo $tickets['pagination']['last']; ?>><a href="#"><?php echo $tickets['pagination']['last']; ?></a></li>
+            <?php } ?>
+            <?php if (isset($tickets['pagination']['next']) && $tickets['pagination']['next']!=0) { ?>
+                <li class='pagination-list uvdpagination' data=<?php echo $tickets['pagination']['next']; ?>><a href="#">&raquo</a></li>
+            <?php } ?>
+        <?php } ?>
+    </ul>
+    </div>
+    </div>
+    </div>
+
+    </div>
+    <?php } else { ?>
+            <div class="message message-error error"><div data-ui-id="messages-message-error"><?php echo $errorMessage; ?></div></div>
+    <?php } ?>
+  </div>
+</div>
+<div id="wait" class="loadingg-mask" data-role="loader" style="display: none;">
+    <div class="popupp popupp-loading">
+      <div class="popupp-inner">
+        <img alt="Loading..." src="<?php echo $block->getViewFileUrl('Webkul_UvDeskConnector::images/aa1b406.gif'); ?>"/>
+        <br>
+      </div>
+  </div>
+</div>
+<script type="text/javascript">
+    require(
+        [
+            'jquery',
+            'mage/template',
+            'Magento_Ui/js/modal/alert',
+		    'Magento_Ui/js/modal/confirm',
+            'jquery/jquery-storageapi'
+        ],function($, template,alert,confirmation){
+            $(document).ready(function(){
+
+                /*to remove all the selected filters for tickets*/
+                $(window).on('load', function(){
+                    var pathname = window.location.pathname;
+                    var url      = window.location.href;
+                    var haveLabels = url.split('labels/');
+                    var baseUrl = "<?php echo $baseUvdesAdminUrl ;?>";
+                    if (haveLabels.length == 1) {
+                        window.history.replaceState({}, "", baseUrl);
+                    }
+                    if (haveLabels.length == 2) {
+                        $labels = haveLabels[1].split('/');
+                        window.history.replaceState({}, "", haveLabels[0]+'labels/'+$labels[0]);
+                    }
+                });
+
+                var addListAfterElemetId;
+                window.currentInputSearch = "";
+                var selectedPageNo = 0;
+                var filterType;
+                var agent_array = [];
+                var customer_array = [];
+                var group_array = [];
+                var priority_array = [];
+                var mailbox_array = [];
+                var team_array = [];
+                var type_array = [];
+                var tag_array = [];
+                var activeTabId;
+                $.localStorage.set('uvdesk_agent',<?php echo json_encode($agent); ?>);
+                $.localStorage.set('uvdesk_customer',<?php echo json_encode($customer); ?>);
+                $.localStorage.set('uvdesk_group',<?php echo json_encode($group); ?>);
+                $.localStorage.set('uvdesk_priority',<?php echo json_encode($priority); ?>);
+                $.localStorage.set('uvdesk_mailbox',<?php echo json_encode($mailbox); ?>);
+                $.localStorage.set('uvdesk_team',<?php echo json_encode($team); ?>);
+                $.localStorage.set('uvdesk_type',<?php echo json_encode($type); ?>);
+                $.localStorage.set('uvdesk_tag',<?php echo json_encode($tag);?>);
+
+                $('#check_all').click(function() {
+                    var status = this.checked;
+                    $("tr td input[type='checkbox']").prop('checked', status);
+                });
+                $("#wk_delete_tickets").on('click',function(){
+                    ticket_ids = $('tr td input[name="selected"]:checked').map(function() {
+                        return this.value;
+                    }).get();
+                    if(ticket_ids.length == 0){
+                        alert({
+                            title: 'Attention',
+                            content: 'You have not selected any items!',
+                            actions: {
+                                always: function(){
+                                    return false;
+                                }
+                            }
+                        });
+                    } else if (ticket_ids.length != 0) {
+                                confirmation({
+                                    title: 'Confirm Action',
+                                    content: 'Are you sure you want to perform this action?',
+                                    actions: {
+                                        confirm: function(){
+                                            $.ajax({
+                                                url 	: 	"<?php echo $block->getUrl('uvdeskcon/tickets/delete')?>",
+                                                type 	: 	"GET",
+                                                dataType: 	"json",
+                                                async   :   true,
+                                                beforeSend:function(){
+                                                    $("#wait").css("display", "block");
+                                                },
+                                                complete: function(){
+                                                    $("#wait").css("display", "none");
+                                                },
+                                                data 	: 	{
+                                                                id 		: ticket_ids
+                                                            },
+                                                success : 	function(data){
+                                                    location.reload("true");
+                                                }
+                                            });
+                                        },
+                                        cancel: function(){
+                                            return false;
+                                        },
+                                        always: function(){
+
+                                        }
+                                    }
+                                });
+                    }
+                });
+                $('.pagination').on('click','li',function(){
+                    $('.pagination li').removeClass('active');
+                    pageNo = $(this).attr('data');
+                    if (pageNo == undefined) {
+                        return false;
+                    }
+                    selectedPageNo = pageNo;
+                    $(this).addClass('active');
+                    var parameter = addPageNo(pageNo);
+                    ajaxRequest(parameter,1);
+                });
+                $('body').on('click',function(e){
+                    if(e.toElement.nodeName == 'I' || e.toElement.nodeName =='SPAN' || e.toElement.nodeName == 'INPUT') {
+                        //return false;
+                    } else {
+                        $('div.bootstrap-select').attr('class','btn-group bootstrap-select');
+                        if(window.currentInputSearch!=""){
+                            $ul = window.currentInputSearch.parent().siblings('ul');
+                            $ticketId = $(this).data('ticketid');
+                            var agentList = $.localStorage.get('uvdesk_agent');
+                            var agentListSearchHtml = "";
+                            $.each(agentList.agent, function(index, element) {
+                                var agentListTemplate = template('#agentList-template');
+                                agentListSearchHtml += agentListTemplate({
+                                                data: {
+                                                    agentId: element.id,
+                                                    agentName: element.name,
+                                                    ticketId: $ticketId
+                                                }
+                                });
+                            });
+                            $ul.html(agentListSearchHtml);
+                            $('div.bootstrap-select').attr('class','btn-group bootstrap-select');
+                        }
+                    }
+                });
+                $('body').on('click','span.agentButton',function(){
+                        $('div.bootstrap-select').attr('class','btn-group bootstrap-select');
+                        $(this).siblings('div').toggleClass('open');
+                        window.selectedAgentListObject = $(this).siblings('div');
+                    }
+                );
+                $('body').on('click','li.agentLists',function(){
+                        var currentAgentSelector = $(this).parent().parent().parent().siblings('span:nth-child(2)');
+                        var ticketId = $(this).children('a').data('ticketid');
+                        var agentId  = $(this).children('a').data('agentid');
+                        var SelectedAgentName  = $(this).children('a').children('span:first-child').text();
+                        window.selectedAgentListObject.attr('class','btn-group bootstrap-select');
+                        agentAssignAjaxRequest(ticketId,agentId,currentAgentSelector,SelectedAgentName);
+                    }
+                );
+                $('body').on('keyup','.agentSearchInput',function(){
+                        $ul = $(this).parent().siblings('ul');
+                        $ticketId = $(this).data('ticketid');
+                        var agentDataa = [];
+                        var agentList = $.localStorage.get('uvdesk_agent');
+                        if ($(this).val().length>1) {
+                            var str = $(this).val();
+                            $.each(agentList,function(outerindex,value){
+                                $.each(value,function(innerindex,prop){
+                                    var patt = new RegExp(str,'i');
+                                    var res = patt.test(prop.name);
+                                if(res){
+                                    var d = {};
+                                    d.id = prop.id;
+                                    d.name = prop.name;
+                                    d.ticketId = $ticketId;
+                                    agentDataa.push(d);
+                                }
+                                });
+                            });
+                        }
+                        if($(this).val().length == 0) {
+                            agentDataa = agentList.agent;
+                        }
+                        var agentListSearchHtml = "";
+                        $.each(agentDataa, function(index, element) {
+                            var agentListTemplate = template('#agentList-template');
+                            agentListSearchHtml += agentListTemplate({
+                                            data: {
+                                                agentId: element.id,
+                                                agentName: element.name,
+                                                ticketId: $ticketId
+                                            }
+                            });
+                        });
+                    $ul.html(agentListSearchHtml);
+
+                });
+                $('body').on('blur','.agentSearchInput',function(){
+                    window.currentInputSearch = $(this);
+                    //     // $(this).parent().parent().parent().attr('class','btn-group bootstrap-select');
+                    //     $ul = $(this).parent().siblings('ul');
+                    //     $ticketId = $(this).data('ticketid');
+                    //     var agentList = $.localStorage.get('uvdesk_agent');
+                    //     var agentListSearchHtml = "";
+                    //     $.each(agentList.agent, function(index, element) {
+                    //         var agentListTemplate = template('#agentList-template');
+                    //         agentListSearchHtml += agentListTemplate({
+                    //                         data: {
+                    //                             agentId: element.id,
+                    //                             agentName: element.name,
+                    //                             ticketId: $ticketId
+                    //                         }
+                    //         });
+                    //     });
+                    // // if()
+                    // $ul.html(agentListSearchHtml);
+                });
+
+                $("#filters > div > div > input").on({
+                    'keyup':function(){
+                        filterType = $(this).parent().attr('filter-type');
+                        addListAfterElemetId = $(this).attr('id');
+                        var flag = 0;
+                        if($(this).val().length>1)
+                        {
+                            var str = $(this).val();
+                            $('.uvdesk-dropdown').remove();
+                            var html = '<div class="uvdesk-dropdown"><ul>';
+                            var agentList = $.localStorage.get('uvdesk_'+filterType);
+                            $.each(agentList,function(index,value){
+                                 $.each(value,function(index,prop){
+                                        var patt = new RegExp(str,'i');
+                                        var res = patt.test(prop.name);
+                                    if(res){
+                                        flag = 1;
+                                     html+='<li filter-id="'+prop.id+'">'+prop.name+'</li>';
+                                    }
+                                 });
+                            });
+                            html += '</ul></div>';
+                            if (flag == 1) {
+                                $(html).insertAfter("#"+addListAfterElemetId);
+                            }
+                        }
+                    },
+                    'blur':function(){
+                        $('.uvdesk-dropdown').fadeOut('slow');
+                    }
+                });
+
+                $('.pos-relative').on('click','li',function(){
+                    var refer = $(this);
+                    var name = $(this).text();
+                    var id =$(this).attr('filter-id');
+                    var ar = typeOfArray(filterType);
+                    if(ar.indexOf(id)<0)
+                    {
+                        var html = '<span class="label label-info">'+name+'<i class="fa fa-times remove" filter-id="'+id+'"></i></span>';
+                        $(html).insertBefore(refer.parent().parent().parent());
+                        $('#'+addListAfterElemetId).val('');
+                        ar.push(id);
+                        var parameter = addFiltersId(filterType,id);
+                        ajaxRequest(parameter,1);
+                    }else{
+                        return false;
+                    }
+                });
+
+                $('div#filters').on('click','i',function(){
+                    filterType = $(this).parent().parent().children('div .pos-relative').attr('filter-type');
+                    var id = $(this).attr('filter-id');
+                    var ar = typeOfArray(filterType);
+                    var i = ar.indexOf(id);
+                    if(i != -1) {
+                        ar.splice(i, 1);
+                    }
+                    $(this).parent().remove();
+                    var parameter = removeFiltersId(filterType,id);
+                    ajaxRequest(parameter,1);
+                });
+                function typeOfArray($type){
+                    switch ($type) {
+                        case 'agent':
+                        return agent_array;
+                        break;
+                        case 'customer':
+                        return customer_array;
+                        break;
+                        case 'group':
+                        return group_array;
+                        break;
+                        case 'priority':
+                        return priority_array;
+                        break;
+                        case 'mailbox':
+                        return mailbox_array;
+                        break;
+                        case 'team':
+                        return team_array;
+                        break;
+                        case 'type':
+                        return type_array;
+                        break;
+                        case 'tag':
+                        return tag_array;
+                        break;
+                    }
+                }
+                $('.btn-group.width-100').on('click','a',function(){
+                    $(".btn-group.width-100 a").removeClass("active");
+                    $(this).addClass('active');
+                    var id = $(this).attr('tab-id');
+                    activeTabId = id;
+                    var parameter = addTabId(id);
+                    ajaxRequest(parameter,1);
+
+                });
+
+                function addTabId($id){
+                    var pathname = window.location.pathname; // Returns path only
+                    var url      = window.location.href;
+                    var splitArray = pathname.split('tab/');
+                    if(splitArray.length<2){
+                        if(pathname.substring(pathname.length-1, pathname.length) == '/'){
+                            var a = pathname+'tab/'+$id;
+                        }else{
+                            var a = pathname+'/tab/'+$id;
+                        }
+                        history.replaceState({}, "", a);
+                        pathname = window.location.pathname;
+                        var pathnameSplit = pathname.split('key/');
+                        return pathnameSplit[1].split('/').slice(1).join('/');
+                    }else{
+                        var aa = splitArray[1].split('/').slice(1).join('/');
+                        var a = splitArray[0]+'tab/'+$id+'/'+aa;
+                        // var x = splitArray[1].split('/');
+                        // if(x.length>=2){
+                        //     a+'/'+x[1];
+                        // }
+                        var havePageNo = a.split('pageNo/');
+                        if(havePageNo.length<2){
+                            history.replaceState({}, "", a);
+                        }else{
+                            a = havePageNo[0]+havePageNo[1].split('/').slice(1).join('/');
+                            history.replaceState({}, "", a);
+                        }
+                        pathname = window.location.pathname;
+                        var pathnameSplit = pathname.split('key/');
+                        return pathnameSplit[1].split('/').slice(1).join('/');
+                    }
+                }
+
+                function addFiltersId($filtertype,$id){
+                    var pathname = window.location.pathname; // Returns path only
+                    var url      = window.location.href;
+                    var splitArray = pathname.split($filtertype+'/');
+                    if(splitArray.length<2){
+                        if(pathname.substring(pathname.length-1, pathname.length) == '/'){
+                            var a = pathname+$filtertype+'/'+$id;
+                        }else{
+                        var a = pathname+'/'+$filtertype+'/'+$id;
+                        }
+                        history.replaceState({}, "", a);
+                        pathname = window.location.pathname;
+                        var pathnameSplit = pathname.split('key/');
+                        return pathnameSplit[1].split('/').slice(1).join('/');
+                    }else{
+                        var a = splitArray[0]+$filtertype+'/'+$id+','+splitArray[1];
+                        var x = splitArray[1].split('/')
+                        if(x.length>=2){
+                            a+'/'+x[1];
+                        }
+
+                        history.replaceState({}, "", a);
+                        pathname = window.location.pathname;
+                        var pathnameSplit = pathname.split('key/');
+                        return pathnameSplit[1].split('/').slice(1).join('/');
+                    }
+                }
+
+                function addPageNo($pageNo){
+                    var pathname = window.location.pathname; // Returns path only
+                    var url      = window.location.href;
+                    var splitArray = pathname.split('pageNo/');
+                    if(splitArray.length<2){
+                        if(pathname.substring(pathname.length-1, pathname.length) == '/'){
+                            var a = pathname+'pageNo/'+$pageNo;
+                        }else{
+                            var a = pathname+'/pageNo/'+$pageNo;
+                        }
+                        history.replaceState({}, "", a);
+                        pathname = window.location.pathname;
+                        var pathnameSplit = pathname.split('key/');
+                        return pathnameSplit[1].split('/').slice(1).join('/');
+                    }else{
+                        var aa = splitArray[1].split('/').slice(1).join('/');
+                        var a = splitArray[0]+'pageNo/'+$pageNo+'/'+aa;
+                        // var x = splitArray[1].split('/');
+                        // if(x.length>=2){
+                        //     a+'/'+x[1];
+                        // }
+
+                        history.replaceState({}, "", a);
+                        pathname = window.location.pathname;
+                        var pathnameSplit = pathname.split('key/');
+                        return pathnameSplit[1].split('/').slice(1).join('/');
+                    }
+                }
+                function removeFiltersId($filterType,$id){
+                    var pathname = window.location.pathname; // Returns path only
+                    var url      = window.location.href;
+                    var splitArray = pathname.split($filterType+'/');
+                    var aa =         splitArray[1].split('/').slice(1).join('/');
+                    var splitArray2 = splitArray[1].split('/');
+                    var last = splitArray2[0].split($id);
+                    if(splitArray2[0] == '' && splitArray2[1] == '/'){
+                        splitArray[0] = splitArray[0].substring(0, splitArray[0].length-1);
+                        var a = splitArray[0];
+                        history.replaceState({}, "", a);
+                        pathname = window.location.pathname;
+                        var pathnameSplit = pathname.split('key/');
+                        return pathnameSplit[1].split('/').slice(1).join('/');
+                    }
+                    if(last[0] == '' && last[1] == ''){
+                        var a = splitArray[0];
+                        if(a.substring(a.length-1, a.length) == '/'){
+                            a = a.substring(0, a.length-1);
+                        }
+                        if(aa.charAt(0) != '/'){
+                            aa = '/'+aa;
+                        }
+                        history.replaceState({}, "", a+aa);
+                        pathname = window.location.pathname;
+                        var pathnameSplit = pathname.split('key/');
+                        return pathnameSplit[1].split('/').slice(1).join('/');
+                    }
+                    if(last[0] == '' && last[1] != ''){
+                        last[1] = last[1].substring(1, last[1].length);
+                        // splitArray2[1] = splitArray2[1].splice(1);
+                        var a = splitArray[0]+$filterType+'/'+last[1]+aa;
+                        history.replaceState({}, "", a);
+                        pathname = window.location.pathname;
+                        var pathnameSplit = pathname.split('key/');
+                        return pathnameSplit[1].split('/').slice(1).join('/');
+                    }if(last[0] != '' && last[1] == ''){
+                        last[0] = last[0].substring(0, last[0].length-1);
+                        var a = splitArray[0]+$filterType+'/'+last[0]+aa;
+                        history.replaceState({}, "", a);
+                        pathname = window.location.pathname;
+                        var pathnameSplit = pathname.split('key/');
+                        return pathnameSplit[1].split('/').slice(1).join('/');
+
+                    }
+                }
+
+               function ajaxRequest($parameter,$havePagination = 0){
+                    $.ajax({
+                        url:"<?php echo $block->getUrl('uvdeskcon/tickets/gettickets')?>"+$parameter,
+                        type:"GET",
+                        dataType:"json",
+                        beforeSend:function(){
+                            $("#wait").css("display", "block");
+                        },
+                        complete: function(){
+                            $("#wait").css("display", "none");
+                        },
+                        success: function($data){
+                            var employee="";
+                            var employeTab=""
+                            var ticketPagination=""
+                            $.each($data['ticket_data'], function(index,element) {
+                                if (index != "allAgent" ) {
+                                    var employeeTemplate = template('#employee-template');
+                                    employee += employeeTemplate({
+                                                    data: {
+                                                        priority: this['priority'],
+                                                        priorityColor: this['priority_color'],
+                                                        ticket: this['id'],
+                                                        name: this['name'],
+                                                        subject: this['subject'],
+                                                        date: this['creation_date'],
+                                                        replies: this['replies'],
+                                                        agent: this['agent'],
+                                                        incrementId :this['incrementId'],
+                                                        allAgentList : $data['agent-information'],
+                                                        pageCount:this['pageCount']
+                                                    }
+                                    });
+                                }
+                            });
+                            if(employee == ""){
+                                employee = '<tr><td class="text-center" colspan="9">No Tickets Found!</td></tr>';
+                            }
+                            $.each($data['tab_data'], function() {
+                                var employeTabTemplate = template('#employeetab-template');
+                                 employeTab += employeTabTemplate({
+                                                data: {
+                                                    tabId: this['tab_id'],
+                                                    tabCount: this['tab_count'],
+                                                    tabName: this['tab_name']
+                                                }
+                                });
+                            });
+                            if($havePagination) {
+                                $.each($data['pagination_data'], function() {
+                                    var ticketPaginationTemplate = template('#ticketPagination-template');
+                                     ticketPagination += ticketPaginationTemplate({
+                                                    data: {
+                                                        first: this['first'],
+                                                        last: this['last'],
+                                                        previous: this['previous'],
+                                                        next: this['next'],
+                                                        firstPageInRange: this['firstPageInRange'],
+                                                        lastPageInRange: this['lastPageInRange'],
+                                                        pagesInRange: this['pagesInRange'],
+                                                        selectedPageNo:selectedPageNo,
+                                                        pageCount:this['pageCount']
+                                                    }
+                                    });
+                                });
+                            $('.pagination').html(ticketPagination);
+                            }
+
+                            $('#ticket-body').html(employee);
+                            $('.uvdesk_navbar').html(employeTab);
+                            $("[tab-id='"+activeTabId+"']").addClass('active');
+                        }
+                    });
+               }
+               function agentAssignAjaxRequest($ticketId,$agentId,$currentAgentSelector,$SelectedAgentName){
+                   $.ajax({
+                        url:"<?php echo $block->getUrl('uvdeskcon/tickets/agentassign')?>",
+                        type:"GET",
+                        dataType:"json",
+                        data:{
+                            ticketid:$ticketId,
+                            agentId:$agentId
+                        },
+                        beforeSend:function(){
+                            $("#wait").css("display", "block");
+                        },
+                        complete: function(){
+                            $("#wait").css("display", "none");
+                        },
+                       success:function($data){
+                        if($data['info']['http_code'] == 200) {
+                            $currentAgentSelector.text($SelectedAgentName);
+                            alert({
+                                title: 'Agent Assignment Process..',
+                                content: "Success ! Agent successfully assigned.",
+                                actions: {
+                                    always: function(){}
+                                }
+                            });
+                        } else {
+                            alert({
+                                title: 'Agent Assignment Process..',
+                                content: "Error ! Agent not assigned.",
+                                actions: {
+                                    always: function(){}
+                                }
+                            });
+                        }
+                       },
+                       error:function(){
+                        alert({
+                            title: 'Agent Assignment Process..',
+                            content: "Error ! Agent not assigned.",
+                            actions: {
+                                always: function(){}
+                            }
+                        });
+                       }
+                   });
+               }
+            });
+        });
+</script>
+<script id="employee-template" type="text/x-magento-template">
+   <tr>
+        <td class="text-center"><input type="checkbox" name="selected" value=<%- data.ticket %>></td>
+
+        <td class="text-center" style="color:<%- data.priorityColor %>;font-weight: bold;">
+           <%- data.priority %>
+        </td>
+
+        <td class="text-center">
+           #<%- data.incrementId %>
+        </td>
+
+        <td class="text-center">
+           <%- data.name %>
+       </td>
+
+       <td class="text-center">
+           <%- data.subject %>
+       </td>
+
+       <td class="text-center">
+           <%- data.date %>
+       </td >
+
+       <td class="text-center">
+           <label class="label label-info"><%- data.replies %></label>
+       </td>
+       <td class="">
+            <span class="badge agentButton" style="margin-left:37px;">
+                <i class="fa fa-pencil"></i>
+            </span>
+            <span><%- data.agent %> </span>
+                <div class="btn-group bootstrap-select">
+                    <div class="dropdown-menu open" role="combobox" style="max-height: 199px; overflow: hidden; min-height: 43px;z-index:900;">
+                        <div class="bs-searchbox">
+                            <input class="agentSearchInput form-control" type="text" class="form-control" autocomplete="off" role="textbox" aria-label="Search" data-ticketid="<%- data.ticket %>" >
+                        </div>
+                        <ul class="dropdown-menu inner"  role="listbox" aria-expanded="true" style="max-height: 144px; overflow-y: auto; min-height: 0px;">
+                        <%_.forEach(data.allAgentList.agent, function (agent,index) {%>
+                            <li data-original-index="0" class="agentLists">
+                                <a tabindex="0" class="" data-tokens="null" role="option" aria-disabled="false" aria-selected="true" data-ticketid="<%- data.ticket %>" data-agentid="<%- agent['id'] %>">
+                                    <span class="text"><%- agent['name'] %></span>
+                                    <span class="glyphicon glyphicon-ok check-mark"></span>
+                                </a>
+                            </li>
+                        <%})%>
+                        </ul>
+                    </div>
+                </div>
+       </td>
+       <td class="text-center">
+           <a href="<?php echo $block->getUrl('uvdeskcon/tickets/ticketthread'); ?>id/<%- data.ticket %>/increment_id/<%- data.incrementId %>" target="_blank" class="btn btn-info">View</a>
+       </td>
+   </tr>
+</script>
+<script id="employeetab-template" type="text/x-magento-template">
+        <a tab-id="<%- data.tabId %>" class="btn btn-default width-16">
+            <i class="<?php echo $block->getGlycophins("<%- data.tabId %>");?>"></i>
+            <span class="hidden-xs"><%- data.tabName %></span><br>
+            <span class="label label-info"><%- data.tabCount %></span>
+        </a>
+</script>
+<script id="ticketPagination-template" type="text/x-magento-template">
+    <%if (data.pageCount>1) {%>
+    <%if (data.previous!=0) {%>
+        <li class='pagination-list uvdpagination' data=<%- data.previous %>><a href="#">&laquo</a></li>
+    <%}%>
+    <%if (data.firstPageInRange!=data.first) {%>
+        <li class='pagination-list uvdpagination' data=<%- data.first %>><a href="#"><%- data.first %></a></li>
+        <li class='pagination-list uvdpagination'><a href="#">...</a></li>
+    <%}%>
+    <%_.forEach(data.pagesInRange, function (page,index) {%>
+            <% if(page == data.selectedPageNo) { %>
+                <li class='pagination-list uvdpagination active' data="<%- page %>"><a href="#"><%- page %></a></li>
+            <% } else { %>
+                <li class='pagination-list uvdpagination' data="<%- page %>"><a href="#"><%- page %></a></li>
+            <% } %>
+    <%})%>
+    <%if (data.lastPageInRange!=data.last) {%>
+        <li class='pagination-list uvdpagination'><a href="#">...</a></li>
+        <li class='pagination-list uvdpagination' data=<%- data.last %>><a href="#"><%- data.last %></a></li>
+    <%}%>
+    <%if (data.next!=0) {%>
+        <li class='pagination-list uvdpagination' data=<%- data.next %>><a href="#">&raquo</a></li>
+    <%}%>
+    <%}%>
+</script>
+<script id="agentList-template" type="text/x-magento-template">
+    <li class="agentLists">
+        <a tabindex="0" class="" data-tokens="null" role="option" aria-disabled="false" aria-selected="true" data-ticketid="<%- data.ticketId %>" data-agentid="<%- data.agentId %>">
+            <span class="text"><%- data.agentName %></span>
+            <span class="glyphicon glyphicon-ok check-mark"></span>
+        </a>
+    </li>
+</script>

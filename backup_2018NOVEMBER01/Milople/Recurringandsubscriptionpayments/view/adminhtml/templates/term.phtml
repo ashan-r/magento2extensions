@@ -1,0 +1,386 @@
+<?php
+/**
+*
+* Do not edit or add to this file if you wish to upgrade the module to newer
+* versions in the future. If you wish to customize the module for your
+* needs please contact us to https://www.milople.com/contact-us.html
+*
+* @category    Ecommerce
+* @package     Milople_Recurringandsubscriptionpayments
+* @copyright   Copyright (c) 2017 Milople Technologies Pvt. Ltd. All Rights Reserved.
+* @url         https://www.milople.com/magento2-extensions/ecurring-and-subscription-payments-m2.html
+*
+**/
+?>
+<?php
+	$_htmlId = 'recurringandrentalpayments';
+	$terms_day 	= \Milople\Recurringandsubscriptionpayments\Model\Terms::TERMSPER_DAY;
+	$terms_week	= \Milople\Recurringandsubscriptionpayments\Model\Terms::TERMSPER_WEEK;
+	$terms_month= \Milople\Recurringandsubscriptionpayments\Model\Terms::TERMSPER_MONTH;
+	$terms_year = \Milople\Recurringandsubscriptionpayments\Model\Terms::TERMSPER_YEAR;
+	$price_calc_type_fix = \Milople\Recurringandsubscriptionpayments\Model\Terms::PRICE_CALC_TYPE_FIXED;
+	$price_calc_type_per = \Milople\Recurringandsubscriptionpayments\Model\Terms::PRICE_CALC_TYPE_PER;
+?>
+<script>
+	var count = 0 ;
+</script>
+<fieldset id="page_base_fieldset" class="fieldset admin__fieldset" style="padding: 5px 0 0;">
+	<legend class="admin__legend legend">
+	Terms
+     </legend>
+	</fieldset>
+<div id="product_info_tabs_group_courses_content">
+	<div class="entry-edit">
+		
+		<div class="fieldset fieldset-wide" id="group_fields_courses">
+			<div class="hor-scroll">
+				<table class="form-list" cellspacing="0">
+					<tbody>
+						<tr>
+							<td class="grid">
+								<table class="data-grid" id="<?php echo $_htmlId; ?>_table" cellspacing="0">
+									<col width="250" />
+									<col width="100" />
+									<col width="100" />
+									<col width="100" />
+                  <col width="100" />
+                  <col width="100" />
+                  <col width="100" />
+                  <col width="100" />
+									<thead>
+										<tr class="headings">
+							<th class="data-grid-th"><?php echo __('Term Title') ?>
+                            <span class="required">*</span></th>
+							<th class="data-grid-th" style="width: 135px;border-right:0"><?php echo __('Repeat Each') ?>
+                            <span class="required">*</span>&nbsp;&nbsp;&nbsp;</th>
+							<th style="border-left:0"><?php echo __('') ?></th>
+                            
+                            <th class="data-grid-th"><?php echo __('Payment Before Days') ?></th>
+							<th class="data-grid-th" style="width: 135px;border-right:0"><?php echo __('Price Per Term') ?>
+                            <span class="required">*</span>&nbsp;&nbsp;&nbsp;</th>
+                           	<th style="border-left:0"><?php echo __('') ?></th>
+
+                            <th class="data-grid-th"><?php echo __('Number of Terms') ?>
+                            <span class="required">*</span></th>
+							<th class="data-grid-th"><?php echo __('Sort Order') ?></th>											
+                            <th class="last data-grid-th">Action</th>
+										</tr>
+									</thead>
+									<tbody id="<?php echo $_htmlId; ?>_container">
+										
+									</tbody>
+									<tfoot>
+										<tr>
+											<td colspan="9" class="a-right">
+												<button id="btn_add_course" type="button" class="scalable add" onclick="testData()"><span><?php echo __('Add Term') ?></span></button>												
+											</td>
+										</tr>
+									</tfoot>
+								</table>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>
+<SCRIPT language="javascript">
+var v = 0 ;
+function testData(ele = '') {
+  
+    var br =  document.createElement("br");
+	//Assign different attributes to the element.
+
+	var term_id  = document.createElement("input");
+    term_id.setAttribute("type", "hidden");
+    term_id.setAttribute("value",((ele == '')?'':ele['id'])); 
+	term_id.setAttribute("id","terms_row_"+v+"_id"); 
+    term_id.setAttribute("name", "plan[terms]["+v+"][id]");
+	document.getElementById("edit_form").appendChild(term_id);
+
+	
+    var lable = document.createElement("input");
+	lable.setAttribute("type", "text");
+    lable.setAttribute("value", ((ele == '')?'':ele['lable']));
+    lable.setAttribute("name", 'plan[terms]['+v+'][label]');
+	lable.setAttribute("required", 'true');
+    
+	var repeateach  = document.createElement("input");
+    repeateach.setAttribute("type", "text");
+    repeateach.setAttribute("value",((ele == '')?'':ele['repeat_each']));
+    repeateach.setAttribute("name", 'plan[terms]['+v+'][repeat_each]');
+	repeateach.setAttribute("required", 'true');
+	
+	var termsper = document.createElement('select');
+    termsper.setAttribute("id", "terms_row_"+v+"_termsper");
+    termsper.setAttribute("name", "plan[terms]["+v+"][termsper]");
+    termsper.setAttribute("onchange","buildPaymentBeforeDays(this.value, 'terms_row_3_paymentbeforedays',"+v+")");
+    
+	 var option_day = document.createElement('option');
+		option_day.setAttribute('value', "<?php echo $terms_day ?>");
+    option_day.appendChild( document.createTextNode( "<?php echo ucwords($terms_day).'(s)' ?>" ));
+		if(ele != '' && ele['terms_per']=="day")
+		{
+			option_day.setAttribute("selected","selected");
+		}
+		termsper.appendChild(option_day);
+	
+	var option_week = document.createElement('option');
+		option_week.setAttribute('value',"<?php echo $terms_week ?>");
+        option_week.appendChild( document.createTextNode( "<?php echo ucwords($terms_week).'(s)' ?>") );
+	    if(ele != '' && ele['terms_per']=="week")
+		{
+			option_week.setAttribute("selected","selected");
+		}
+		termsper.appendChild(option_week);
+	
+	var option_month = document.createElement('option');
+		option_month.setAttribute('value', "<?php echo $terms_month ?>");
+        option_month.appendChild( document.createTextNode( "<?php echo ucwords($terms_month).'(s)' ?>") );
+		if(ele != '' && ele['terms_per']=="month")
+		{
+			option_month.setAttribute("selected","selected");
+		}
+		termsper.appendChild(option_month);
+	
+    var option_year = document.createElement('option');
+		option_year.setAttribute('value', "<?php echo $terms_year ?>");
+        option_year.appendChild( document.createTextNode("<?php echo ucwords($terms_year).'(s)' ?>") );
+		if(ele != '' && ele['terms_per']=="year")
+		{
+			option_year.setAttribute("selected","selected");
+		}
+		termsper.appendChild(option_year);
+	
+	
+	var paymentbeforedays = document.createElement('select');
+    paymentbeforedays.setAttribute("id", "terms_row_"+v+"_paymentbeforedays");
+    paymentbeforedays.setAttribute("name", "plan[terms]["+v+"][paymentbeforedays]");
+	
+	if(ele != '')
+	{
+		var option_element = document.createElement('option');
+    
+		if(ele['terms_per']=='day')
+		{
+			paymentbeforedays.setAttribute("style","display:none;");
+			option_element.setAttribute('value', 0);
+		}
+		else
+		{
+			if (ele['terms_per'] == 'week') {
+				maximum_days = 5;
+			}
+			if (ele['terms_per'] == 'month') {
+				maximum_days = 10;
+			}
+			if (ele['terms_per'] == 'year') {
+				maximum_days = 30;
+			}
+			for ( var i = 0; i <= maximum_days; i++ ){
+				var option_element = document.createElement('option');
+				option_element.setAttribute('value',i);
+				option_element.appendChild( document.createTextNode(  i ) );
+				if (i == ele['paymentbeforedays']){
+					option_element.setAttribute("selected", "selected");
+				}
+				paymentbeforedays.appendChild(option_element);
+			}
+		} 
+		
+	}
+
+	else if(ele == '')
+	{
+	 	paymentbeforedays.setAttribute("style","display:none;");
+	}
+	var price  = document.createElement("input");
+    price.setAttribute("type", "text");
+    price.setAttribute("value", ((ele == '')?'':ele['price']));
+    price.setAttribute("name", 'plan[terms]['+v+'][price]');
+		price.setAttribute("id", "terms_row_"+v+"_price");
+		price.setAttribute("required", 'true');
+		var pricecalculationtype = document.createElement('select');
+    pricecalculationtype.setAttribute("id", "terms_row_"+v+"_pricecalculationtype");
+    pricecalculationtype.setAttribute("name", "plan[terms]["+v+"][pricecalculationtype]");
+  
+	 var fixed = document.createElement('option');
+		fixed.setAttribute('value', "<?php echo $price_calc_type_fix ?>");
+		if (ele != '' && ele['cal_type']==0){
+            fixed.setAttribute("selected", "selected");
+    }
+    fixed.appendChild( document.createTextNode("<?php echo 'Fixed' ?>") );
+		pricecalculationtype.appendChild(fixed);
+	
+	 var percentage = document.createElement('option');
+	 percentage.setAttribute('value', "<?php echo $price_calc_type_per ?>");
+   percentage.appendChild( document.createTextNode("<?php echo 'Percentage' ?>") );
+	if (ele != '' && ele['cal_type']==1){
+            percentage.setAttribute("selected", "selected");
+        }
+		pricecalculationtype.appendChild(percentage);
+	
+	var noofterms  = document.createElement("input");
+    noofterms.setAttribute("type", "text");
+    noofterms.setAttribute("value",((ele == '')?'':ele['noofterms'])); 
+    noofterms.setAttribute("name", "plan[terms]["+v+"][noofterms]");
+	noofterms.setAttribute("id", "terms_row_"+v+"_noofterms");
+	noofterms.setAttribute("required", 'true');
+	
+	
+	var sortorder  = document.createElement("input");
+    sortorder.setAttribute("type", "text");
+    sortorder.setAttribute("value",((ele == '')?'':ele['sortorder']));
+    sortorder.setAttribute("name", 'plan[terms]['+v+'][sortorder]');  
+	sortorder.setAttribute("id", "courses_row_"+v+"_sortorder");
+	
+	var action = document.createElement("button");
+    action.setAttribute("type", "button");
+    action.setAttribute("class", "action-remove");
+	action.setAttribute("value", v);
+	action.setAttribute("onclick","deleteterm(this)");
+	action.setAttribute("id", "terms_row_"+v+"_delete_button");
+	
+	var actionname = document.createElement("span");
+	actionname.innerHTML= "Delete";
+	action.appendChild(actionname);
+	
+	var delete_term  = document.createElement("input");
+  delete_term.setAttribute("type", "hidden");
+  delete_term.setAttribute("value",''); 
+  delete_term.setAttribute("name", "plan[terms]["+v+"][delete]");
+	delete_term.setAttribute("id", "terms_row_"+v+"_delete");
+	var tr = document.createElement("tr") ;
+	tr.setAttribute("id","tr" + v);
+	var foo = document.getElementById("recurringandrentalpayments_container");
+  var foo_tr = foo.appendChild(tr);
+	var td0 = document.createElement("td");
+	td0.setAttribute("id","term" + 0);//.appendChild(lable);
+  foo_tr.appendChild(td0);
+	td0.appendChild(lable);
+	td0.appendChild(term_id);
+	var td1 = document.createElement("td");
+	td1.setAttribute("id","term" + 1);//.appendChild(lable);
+  foo_tr.appendChild(td1);
+	td1.appendChild(repeateach);
+	var td2 = document.createElement("td");
+	td2.setAttribute("id","term" + 2);//.appendChild(lable);
+  foo_tr.appendChild(td2);
+	td2.appendChild(termsper);
+	var td3 = document.createElement("td");
+	td3.setAttribute("id","term" + 3);//.appendChild(lable);
+  foo_tr.appendChild(td3);
+	td3.appendChild(paymentbeforedays);
+	var td4 = document.createElement("td");
+	td4.setAttribute("id","term" + 4);//.appendChild(lable);
+  foo_tr.appendChild(td4);
+	td4.appendChild(price);
+	var td5 = document.createElement("td");
+	td5.setAttribute("id","term" + 5);//.appendChild(lable);
+  foo_tr.appendChild(td5);
+	td5.appendChild(pricecalculationtype);
+	var td6 = document.createElement("td");
+	td6.setAttribute("id","term" + 6);//.appendChild(lable);
+  foo_tr.appendChild(td6);
+	td6.appendChild(noofterms);
+	var label = document.createElement('label');
+    label.innerHTML = "Set 0 for Infinity";
+	td6.appendChild(label);
+	
+	var td7 = document.createElement("td");
+	td7.setAttribute("id","term" + 7);//.appendChild(lable);
+    foo_tr.appendChild(td7);
+	td7.appendChild(sortorder);
+	
+	var td8 = document.createElement("td");
+		td8.setAttribute("id","term" + 8);//.appendChild(lable);
+		foo_tr.appendChild(td8);
+		td8.appendChild(action);
+		td8.appendChild(delete_term);
+		v++;
+	}
+	function buildPaymentBeforeDays (term, control_id,v) 
+	{
+		var old_length = document.getElementById('terms_row_'+v+'_paymentbeforedays').options.length;
+		for (var i = old_length - 1; i >= 0; i--) {
+			document.getElementById('terms_row_'+v+'_paymentbeforedays').remove(i);
+		}
+		if (term == 'day') {
+			maximum_days = 0;
+		}
+		if (term == 'week') {
+			maximum_days = 5;
+		}
+		if (term == 'month') {
+			maximum_days = 10;
+		}
+		if (term == 'year') {
+			maximum_days = 30;
+		}
+		var daySelect = document.getElementById('terms_row_'+v+'_paymentbeforedays');
+		for ( var i = 0; i <= maximum_days; i++ ){
+				var option_element = document.createElement('option');
+				option_element.setAttribute('value',i);
+				option_element.appendChild( document.createTextNode(  i ) );
+				if (i == 0){
+					option_element.setAttribute("selected", "selected");
+				}
+				daySelect.appendChild(option_element);
+		}
+		if(maximum_days > 0)
+		{
+			daySelect.setAttribute("style","display:block;");
+		}
+		else
+		{
+			option_element.setAttribute('value', 0);daySelect.appendChild(option_element);
+			daySelect.setAttribute("style","display:none;");
+		}
+		
+		
+	}
+function getval(){
+    var myVar = document.getElementById('element').value;
+		testData();
+}  
+	function deleteterm(ele)
+	{		
+		
+		var row = document.getElementById("tr"+ele.value);
+		var retVal = confirm("Please confirm that, if you will delete this term then relevant subscriptions will not be processed.Are you sure to delete this term?");
+		if( retVal == true )
+		{
+				row.style.display = 'none';
+			  document.getElementById("terms_row_"+ele.value+"_delete").value=1;
+		}
+  }
+</SCRIPT>
+<span id="fooBar">&nbsp;</span>
+
+
+<?php  
+$terms = $this->getTerms($this->getRequest()->getParam('plan_id'));	
+$term_data = array();
+$i = 0;
+foreach($terms as $val)
+{
+	$term_data['lable'] =$val->getLabel();
+	$term_data['repeat_each'] = $val->getRepeateach();
+	$term_data['terms_per'] = $val->getTermsper();
+	$term_data['paymentbeforedays'] = $val->getPaymentBeforeDays();
+	$term_data['price'] = $val->getPrice();
+	$term_data['cal_type'] = $val->getPriceCalculationType();
+	$term_data['noofterms'] = $val->getNoofterms();
+	$term_data['sortorder'] = $val->getSortorder();
+	$term_data['id'] = $val->getTermsId();
+	$i++;
+	?>
+<SCRIPT>
+	testData(<?php echo json_encode($term_data); ?>);
+</SCRIPT>
+<?php
+}  
+
+?>
+

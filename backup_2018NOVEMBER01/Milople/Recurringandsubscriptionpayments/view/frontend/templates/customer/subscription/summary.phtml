@@ -1,0 +1,205 @@
+<?php
+/**
+*
+* Do not edit or add to this file if you wish to upgrade the module to newer
+* versions in the future. If you wish to customize the module for your
+* needs please contact us to https://www.milople.com/contact-us.html
+*
+* @category    Ecommerce
+* @package     Milople_Recurringandsubscriptionpayments
+* @copyright   Copyright (c) 2017 Milople Technologies Pvt. Ltd. All Rights Reserved.
+* @url         https://www.milople.com/magento2-extensions/ecurring-and-subscription-payments-m2.html
+*
+**/
+$terms = $this->getTerm();
+$order = $this->getOrder();
+$plan =  $this->getPlan(); 
+$currenct_customer = $this->getCustomer()->getId();
+?>
+
+<?php 
+if($this->getSubscription()->getCustomerId() == $currenct_customer ): ?>
+ <div class="page-title title-buttons">
+        <h3><?php //echo $this->getTitle()?></h3>
+    </div>
+ <div class="block block-addresses-default">
+	 <div class= "block-content">
+        <div class="box box-address-billing">
+     		<ol>
+				<h2><?php echo __('Subscription Information') ?></h2>
+                <li class= "item" style="border: 1px solid rgb(204, 204, 204); padding-left: 10px; padding-top: 4px;">
+                  <p>
+                  	<table>
+                    <tr height="25px;">
+                    	<td> <?php  echo __('Subscription Start Date : ');?></td>
+                        <td><?php echo $block->formatDate($this->getSubscription()->getDateStart(), \IntlDateFormatter::LONG)    ?></td>
+                    </tr>
+                    <tr height="25px;">
+                     	<td><?php  echo __('Subscription Expiry Date : '); ?></td>
+                        <td>
+                       	 <?php
+							if ($this->getSubscription()->isInfinite() == 1):
+									echo '-';
+								else:
+							 		echo $block->formatDate($this->getSubscription()->getDateExpire(), \IntlDateFormatter::LONG); 
+							endif;
+						?>
+                   		</td>
+                    </tr>
+                    <tr height="25px;">
+                    	<td><?php  echo __('Upcoming Payment Date  : ');  ?></td>
+                        <td><?php echo $block->formatDate($this->getSubscription()->getNextPaymentDate(), \IntlDateFormatter::LONG);   ?></td>
+                    </tr>
+                    <tr height="25px;">
+                    	<td><?php  echo __('Subscribed Plan : ');    ?></td>
+                        <td><?php echo $plan->getPlanName();  ?></td>
+                    </tr>
+                    <tr height="25px;">
+                    	<td><?php echo __('Subscribed Term :');  ?></td>
+                        <td><?php echo __($terms->getLabel());   ?></td>
+
+                    </tr>
+                     <tr height="25px;">
+                    	<td><?php echo __('Shipping Method : ');   ?></td>
+ 						<td><?php echo $order->getShippingDescription(); ?></td>
+                    </tr>
+                     
+                     <tr height="25px;">
+                    	<td><?php  echo __('Status : ')   ?></td>
+                        <td><?php echo $this->getSubscription()->getSubscriptionStatusLabel()  ?></td>
+                    </tr>
+                    </table>
+					</li>   
+                    <h2><?php echo __('Payment Method') ?></h2>
+               		<li class="item" style="border: 1px solid rgb(204, 204, 204); padding-left: 10px; padding-top: 4px; padding-bottom:5px;">
+						<?php echo $order->getPayment()->getMethodInstance()->getTitle(); ?><br />
+                  </li>
+			</ol>
+        </div>
+	 <div class="box box-address-shipping">
+             <h2><?php echo __('Customer Information') ?></h2>
+                <ol style="border: 1px solid rgb(204, 204, 204); padding-left: 18px; padding-top: 10px;" >
+                    <li class="item">
+                     <table>
+                  	    <tr height="25px;">
+                   			 <td class="label"><label><?php echo __('Name :') ?></label></td>
+                   			 <td class="value"><?php echo $order->getCustomerName();?></td>
+             		   </tr>
+                   	   <tr height="25px;">
+                   			 <td class="label"><label><?php echo __('Email :') ?></label></td>
+                   			 <td class="value"><a href="mailto:<?php echo $order->getCustomerEmail() ?>"><?php echo $order->getCustomerEmail();?></a></td>
+             		   </tr>
+                        <?php if ($_groupName = $this->getCustomerGroupName()) : ?>
+                            <tr height="25px;">
+                                <td width="42%" class="label"><label><?php echo __('Customer Group :') ?></label></td>
+                                <td class="value"><?php echo $_groupName ?></td>
+                            </tr>
+               		  <?php endif; ?>
+        				<tr height="25px;">
+                          <td colspan="2">
+                        <h5 style="padding-top: 15px;"><?php echo __('Billing Address') ?></h5>
+						   <address class="admin__page-section-item-content">
+							   <?php echo $this->addressRenderer->format($order->getBillingAddress(), 'html'); ?>
+						   </address>
+                        </td>
+                        </tr>
+					   <?php if(!$order->getIsVirtual()): ?>
+							<tr height="25px;">
+							  <td colspan="2">
+									  <h5 style="padding-top: 18px;"><?php echo __('Shipping Address') ?></h5>
+									  <address>
+										<?php echo $this->addressRenderer->format($order->getShippingAddress(), 'html'); ?><br/>
+									 </address>
+							</td>
+						 </tr>
+					  <?php endif;?>
+                     </table>
+                    </li>
+                </ol>
+    	</div>
+</div>
+  
+   <div class="block-content">
+  	<ol>
+		<div class="col2-set addresses-list">
+    		<div class="col-1 addresses-primary">
+     			<h2><?php  echo __('Subscribed Items') ?></h2>
+     		</div>
+  		</div>
+	  <table id="my-orders-table" class="data table table-order-items history">
+       <thead>
+            <tr>
+                <th><?php echo __('Product ID') ?></th>
+                <th><?php echo __('Product Name') ?></th>
+                <th><?php echo __('SKU') ?></th>
+                 <th><span class="nobr"><?php echo __('Product Price') ?></span></th>
+                <th><span class="nobr"><?php echo __('Subscription Amount') ?></span></th>
+                <th class="a-center"><?php echo __('Qty') ?></th>
+            </tr>
+        </thead>
+        <?php $_items = $this->getItemsCollection(); ?>
+        <?php $i=0; foreach ($_items as $_item):?>
+            <?php 
+			$productOptions = $_item->getProductOptions();
+			$isRecurringProduct = false;
+			if(isset($productOptions['info_buyRequest']['milople_subscription_type']))
+			{
+				if($productOptions['info_buyRequest']['milople_subscription_type']==$terms->getTermsId())
+					$isRecurringProduct=true;
+			}
+			if ($_item->getParentItem() || !$isRecurringProduct) continue; else $i++;?>
+            <?php  
+			$price = $terms->getPrice();
+			$termprice = 0;
+			if($terms->getPriceCalculationType() == 1)
+			{
+				$termprice = $_item->getPrice() * $terms->getPrice() /100 ; 
+				$price = $_item->getPrice()  -  $termprice ;
+			}
+			?>
+
+            <tbody class="<?php echo $i%2?'even':'odd' ?>">
+				<tr class="headings">
+					<td><?php echo __($_item->getId()) ?></td>
+					<td><?php echo __($_item->getName()) ?></td>
+					<td><?php echo __($_item->getSku()) ?></td>
+					<td><span class="nobr"><?php echo $this->_currency->currency($_item->getOriginalPrice(),true,false); ?></span></td>
+                    <td><?php echo $this->_currency->currency($price,true,false);?></td>
+					<td class="a-center"><?php echo __((int)$_item->getQtyOrdered()) ?></td>
+				</tr>
+            </tbody>
+        <?php endforeach; ?>
+    </table>
+   </ol>
+  </div>
+     <div class="col2-set generic-box">
+		<?php //if ($this->getSubscription()->getStatus() == \Milople\Recurringandsubscriptionpayments\Model\Subscription::STATUS_ENABLED || $this->getSubscription()->getStatus() == \Milople\Recurringandsubscriptionpayments\Model\Subscription::STATUS_SUSPENDED_BY_CUSTOMER): ?>
+		<ol>
+			<li>
+				<?php if($this->getSubscription()->getStatus() != \Milople\Recurringandsubscriptionpayments\Model\Subscription::STATUS_ENABLED): ?>
+					<em><?php  echo __('If you want to suspend or cancel this subscriptoin, please click')?>
+                 <a href="<?php echo $block->getUrl('contact');?>"><?php echo __("here")?></a>.</em>
+				<?php endif; ?>
+			</li>
+		</ol>
+		 
+     </div>
+ 	<div class="button-set">
+            <a href="<?php echo $block->getUrl('*/*/subscription') ?>" class="left">&laquo; <?php echo __('Back') ?></a>
+     </div>
+</div>
+<?php
+else:  ?>
+<script>
+require([
+	"jquery",
+	"mage/mage"
+], function($){
+
+   	$($.mage.redirect("<?php /* @escapeNotVerified */ echo $block->getUrl('customer/account/login'); ?>", "assign",0));
+
+});
+</script>
+<?php endif;
+?>
+

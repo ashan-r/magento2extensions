@@ -1,0 +1,36 @@
+<!--
+/**
+*
+* Do not edit or add to this file if you wish to upgrade the module to newer
+* versions in the future. If you wish to customize the module for your
+* needs please contact us to https://www.milople.com/contact-us.html
+*
+* @category    Ecommerce
+* @package     Milople_Recurringandsubscriptionpayments
+* @copyright   Copyright (c) 2017 Milople Technologies Pvt. Ltd. All Rights Reserved.
+* @url         https://www.milople.com/magento2-extensions/ecurring-and-subscription-payments-m2.html
+*
+**/
+-->
+<!--@subject Your {{var store.getFrontendName()}} Subscription Cancelled Email @-->
+<body leftmargin="0" topmargin="0" marginwidth="0" marginheight="0" bgcolor="#ffffff" style="margin:0; padding:0; -webkit-text-size-adjust:none; -ms-text-size-adjust:none;">
+<table   cellspacing="0" cellpadding="1" border="0" id = "emailcontainer" style = "margin:0 auto; max-width:620px; width:100%; background-color:#fff">
+	<tr id = "emailheadertop" style = "height:30px; width:100%;" >
+			<td id = "emailheaderbpttomleft" style ="float: left;padding-left: 3%;padding-top: 25px;width: 97%;">
+				<a href= "{{var store_url}}"><img src = "{{var logo_url }}" alt="{{var logo_alt}}" border="0" /></a>  		
+			</td>
+	</tr>
+	<tr id = "emailheadertop" style = "float: left;padding:20px 3% 15px; width: 94%;" >
+		<td id = "emailheaderbpttomleft" style ="float:left;width:100%;">
+			<p style="color:#000000; font-size:15px; margin-bottom: 20px;"><strong>Dear {{var customer_name}},</strong></p>
+			<span class="_CONTENT_">
+				 Your <a href="{{var user_subscription}}">subscription</a> was cancelled recently. You can reactivate it by placing new subscription order.
+                 Thank you for using our product(s). Visit our <a href="{{store url=""}}">store </a> for more products and exciting offers.
+            </span>
+		</td>
+	</tr>
+	<tr>
+         <td bgcolor="#EAEAEA" align="center" style="background:#EAEAEA; text-align:center;"><center><p style="font-size:12px; margin:0; font-size: 15px; padding: 10px 0;">Thank you for using our services. Visit our <strong><a href= "{{var store_url}}">store</a></strong> for more products and exciting offers.</p></center></td>
+    </tr>
+</table>
+	

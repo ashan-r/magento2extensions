@@ -1,0 +1,6 @@
+.admin__menu .level-0.item-all > a:before {
+    content: url('../images/milople-logo.svg');
+	height: 27px;
+	width: 50px;
+	margin: 0 auto;
+}

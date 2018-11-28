@@ -1,0 +1,270 @@
+<?xml version="1.0"?>
+<!--
+/**
+*
+* Do not edit or add to this file if you wish to upgrade the module to newer
+* versions in the future. If you wish to customize the module for your
+* needs please contact us to https://www.milople.com/contact-us.html
+*
+* @category    Ecommerce
+* @package     Milople_Recurringandsubscriptionpayments
+* @copyright   Copyright (c) 2017 Milople Technologies Pvt. Ltd. All Rights Reserved.
+* @url         https://www.milople.com/magento2-extensions/ecurring-and-subscription-payments-m2.html
+*
+**/
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+	<system>
+	    <tab id="Milople" translate="label" sortOrder="150">
+		 <label>Milople Extensions</label>
+	    </tab>
+	    <section id="recurringandsubscription" translate="label" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+            <class>separator-top</class>
+            <label>Recurring and Subscription Payments</label>
+            <tab>Milople</tab>
+           <resource>Milople_Recurringandsubscriptionpayments::recurringandsubscriptionpayments_config</resource>  
+     <group id="license_status_group" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
+                <label>License And Status</label>
+                <field id="serial_key" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Serial Key</label>
+                    <backend_model>Milople\Recurringandsubscriptionpayments\Model\Config\Backend\Lookup</backend_model>
+                </field> 
+		<field id="status" translate="label" type="select" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Status</label>
+		    <source_model>Milople\Recurringandsubscriptionpayments\Model\Config\Source\Status</source_model>
+                </field>
+	  </group>	
+	  <group id="general_group" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0">
+         <label>General Settings</label>    
+         <field id="recurring_brand_label" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Recurring &amp; Subscription Payments Brand Label</label>
+                    <validate>required-entry</validate>
+       </field>   
+		<field id="activate_order_status" translate="label" type="select" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0">
+		    <validate>required-entry</validate>
+                    <label>Activate Subscription On</label>
+		    <source_model>Milople\Recurringandsubscriptionpayments\Model\Config\Source\Orderstatus</source_model>
+        </field>
+ 		<field id="availableto" translate="label" type="select" sortOrder="30" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Enable Recurring &amp; Subscription Payments For</label>
+                    <source_model>Milople\Recurringandsubscriptionpayments\Model\Config\Source\Availableto</source_model>
+                </field>
+		<field id="customergroup" translate="label" type="multiselect" sortOrder="40" showInDefault="1" showInWebsite="0" showInStore="0">
+					   <depends> 						 
+ 						 <field id="availableto">3</field>
+ 						 </depends>                    
+                    <label>Customer Groups</label>
+                    <source_model>Milople\Recurringandsubscriptionpayments\Model\Config\Source\Customergroups</source_model>
+                </field>
+	  </group>
+		<!-- Discount Code Configuration. It will be avaliable in next version -->		
+	  <group id="discount_group" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="0" showInStore="0">
+                <label>Discount Settings</label>
+                <field id="apply_discount_settings" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Apply Discount</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>	
+                </field>
+		<field id="availableto" translate="label" type="select" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <depends>
+                        <field id="apply_discount_settings">1</field>
+                    </depends>
+	   	    <label>Discount Available To</label>
+                    <source_model>Milople\Recurringandsubscriptionpayments\Model\Config\Source\Availableto</source_model>
+                </field>
+		<field id="apply_discount_group" translate="label" type="multiselect" sortOrder="30" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <depends>
+                        <field id="apply_discount_settings">1</field>
+			<field id="availableto">3</field>
+                    </depends>
+		    <label>Customer Groups</label>
+                    <source_model>Milople\Recurringandsubscriptionpayments\Model\Config\Source\Customergroups</source_model>
+                </field>
+		<field id="apply_discount_on" translate="label" type="select" sortOrder="40" showInDefault="1" showInWebsite="0" showInStore="0">
+                   <depends>
+                        <field id="apply_discount_settings">1</field>
+                        <field id="available_to">3</field>
+                    </depends>
+		    <label>Apply Discount On</label>
+                    <source_model>Milople\Recurringandsubscriptionpayments\Model\Config\Source\Applydiscount</source_model>
+                </field>
+		<field id="cal_type" translate="label" type="select" sortOrder="50" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <depends>
+                        <field id="apply_discount_settings">1</field>
+                    </depends>
+		    <label>Calculate Discount In</label>
+                    <source_model>Milople\Recurringandsubscriptionpayments\Model\Config\Source\Discountcalculationtype</source_model>
+                </field>
+		<field id="amount" translate="label" type="text" sortOrder="60" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <depends>
+                        <field id="apply_discount_settings">1</field>
+                    </depends>
+		          <label>Discount Value</label>        
+					<backend_model>Milople\Recurringandsubscriptionpayments\Model\Config\Backend\Validation</backend_model>    
+                </field>
+	 </group>
+     <group id="recurring_and_subscription_payments_order_confirmation_email" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="0" showInStore="0">
+            <label>Order Confirmation Email Settings</label>
+            <field id="send_order_confirmation_email" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
+                <label>Send Order Confirmation Email</label>
+                <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>	
+                <comment><![CDATA[This email will only be sent if subscription is activated.]]></comment>
+            </field> 
+            <field id="sender" translate="label" type="select" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0">
+                 <depends>
+                        <field id="send_order_confirmation_email">1</field>
+                 </depends>
+                <label>Email Sender</label>
+                <source_model>Magento\Config\Model\Config\Source\Email\Identity</source_model>	
+            </field>
+            <field id="template" translate="label" type="select" sortOrder="30" showInDefault="1" showInWebsite="0" showInStore="0">
+					 <depends>
+                        <field id="send_order_confirmation_email">1</field>
+                 </depends>                
+		<label>Email Template</label>
+                <source_model>Magento\Config\Model\Config\Source\Email\Template</source_model>
+            </field>    
+            <field id="cc_to" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="0" showInStore="0">
+                <depends>
+                        <field id="send_order_confirmation_email">1</field>
+                 </depends> 
+                <validate>validate-email</validate>
+                <label>Email CC To</label>	
+            </field>  
+     </group>
+     <group id="next_payments_reminder_email" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="0" showInStore="0">
+            <label>Upcoming Payment Reminder Email Settings</label>
+            <field id="send_next_payments_reminder_email" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
+                <label>Send Upcoming Payment Reminder Email</label>
+                <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>	
+                <comment><![CDATA[This email will only be sent if subscription is activated.]]></comment>
+            </field> 
+            <field id="reminder_before_next_payments" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0">
+		<depends>
+                        <field id="send_next_payments_reminder_email">1</field>
+                 </depends>                
+		 <label>Send Email Before Days</label>
+				<validate>validate-number</validate>
+				<comment><![CDATA[The days will be considered based on due date of upcoming payment.]]></comment>
+            </field>
+            <field id="sender" translate="label" type="select" sortOrder="30" showInDefault="1" showInWebsite="0" showInStore="0">
+		<depends>
+                        <field id="send_next_payments_reminder_email">1</field>
+                 </depends>                    
+		<label>Email Sender</label>
+                <source_model>Magento\Config\Model\Config\Source\Email\Identity</source_model>	
+            </field>
+            <field id="template" translate="label" type="select" sortOrder="40" showInDefault="1" showInWebsite="0" showInStore="0">
+		<depends>
+                        <field id="send_next_payments_reminder_email">1</field>
+                 </depends>                    
+		<label>Email Template</label>
+                <source_model>Magento\Config\Model\Config\Source\Email\Template</source_model> 
+            </field>    
+            <field id="cc_to" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="0" showInStore="0">
+		<depends>
+                        <field id="send_next_payments_reminder_email">1</field>
+                 </depends>                    
+		<validate>validate-email</validate>
+                <label>Email CC To</label>	
+            </field>  
+     </group>
+     <group id="next_payments_confirmation_email" translate="label" type="text" sortOrder="60" showInDefault="1" showInWebsite="0" showInStore="0">
+            <label>Payment Confirmation Email Settings</label>
+            <field id="send_next_payments_confirmation_email" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
+                <label>Send Payment Confirmation Email</label>
+                <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>	
+                <comment><![CDATA[This email will only be sent if subscription is activated.]]></comment>
+            </field> 
+            <field id="sender" translate="label" type="select" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0">
+		<depends>
+                        <field id="send_next_payments_confirmation_email">1</field>
+                 </depends>                    
+		<label>Email Sender</label>
+                <source_model>Magento\Config\Model\Config\Source\Email\Identity</source_model>	
+            </field>
+            <field id="template" translate="label" type="select" sortOrder="30" showInDefault="1" showInWebsite="0" showInStore="0">
+		<depends>
+                        <field id="send_next_payments_confirmation_email">1</field>
+                 </depends>                  
+		<label>Email Template</label>
+                <source_model>Magento\Config\Model\Config\Source\Email\Template</source_model>
+            </field>    
+            <field id="cc_to" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="0" showInStore="0">
+		<depends>
+                        <field id="send_next_payments_confirmation_email">1</field>
+                 </depends>                  
+		<validate>validate-email</validate>
+                <label>Email CC To</label>	
+            </field>  
+     </group>
+     <group id="subscription_status_change_email" translate="label" type="text" sortOrder="70" showInDefault="1" showInWebsite="0" showInStore="0">
+            <label>Subscription Status Notifications Settings</label>
+            <field id="subscriptionstatus" translate="label" type="multiselect" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
+                <label>Send Notifications for Status</label>   
+                <source_model>Milople\Recurringandsubscriptionpayments\Model\Config\Source\Subscriptionstatus</source_model>
+            </field> 
+           <field id="active_status_email_template" translate="label" type="select" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0">
+                <label>Active Status Email Template</label>
+                <source_model>Magento\Config\Model\Config\Source\Email\Template</source_model>
+            </field> 
+            <field id="suspend_status_email_template" translate="label" type="select" sortOrder="30" showInDefault="1" showInWebsite="0" showInStore="0">
+                <label>Suspended Status Email Template</label>
+                <source_model>Magento\Config\Model\Config\Source\Email\Template</source_model>
+            </field> 
+            <field id="cancel_status_email_template" translate="label" type="select" sortOrder="40" showInDefault="1" showInWebsite="0" showInStore="0">
+                <label>Cancel Status Email Template</label>
+                <source_model>Magento\Config\Model\Config\Source\Email\Template</source_model>
+            </field> 
+            <field id="expire_status_email_template" translate="label" type="select" sortOrder="50" showInDefault="1" showInWebsite="0" showInStore="0">
+                <label>Expire Status Email Template</label>
+                <source_model>Magento\Config\Model\Config\Source\Email\Template</source_model>
+            </field> 
+            <field id="sender" translate="label" type="select" sortOrder="60" showInDefault="1" showInWebsite="0" showInStore="0">
+                <label>Email Sender</label>
+                <source_model>Magento\Config\Model\Config\Source\Email\Identity</source_model>	
+            </field>
+            <field id="cc_to" translate="label" type="text" sortOrder="70" showInDefault="1" showInWebsite="0" showInStore="0">
+                <validate>validate-email</validate>
+                <label>Email CC To</label>	
+            </field>  
+     </group>
+     <group id="expire_reminder_email" translate="label" type="text" sortOrder="80" showInDefault="1" showInWebsite="0" showInStore="0">
+            <label>Subscription Expiry Reminder Email Setttings</label>
+            <field id="send_expire_reminder_email" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
+               <label>Subscription Expiry Reminder Email</label>
+                <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>	
+                <comment><![CDATA[This email will only be sent if subscription is activated.]]></comment>
+            </field> 
+            <field id="reminder_before_expire" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0">
+		<depends>
+                        <field id="send_expire_reminder_email">1</field>
+                 </depends>                
+		 <label>Send Email Before Days</label>
+				<validate>validate-number</validate>
+				<comment><![CDATA[The days will be considered based on last term end date of subscription.]]></comment>
+            </field>
+            <field id="sender" translate="label" type="select" sortOrder="30" showInDefault="1" showInWebsite="0" showInStore="0">
+		<depends>
+             <field id="send_expire_reminder_email">1</field>
+                 </depends>                
+		<label>Email Sender</label>
+                <source_model>Magento\Config\Model\Config\Source\Email\Identity</source_model>	
+            </field>
+            <field id="template" translate="label" type="select" sortOrder="40" showInDefault="1" showInWebsite="0" showInStore="0">
+				<depends>
+             <field id="send_expire_reminder_email">1</field>
+                 </depends>                   
+                <label>Email Template</label>
+                <source_model>Magento\Config\Model\Config\Source\Email\Template</source_model> 
+            </field>    
+            <field id="cc_to" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="0" showInStore="0">
+				<depends>
+             <field id="send_expire_reminder_email">1</field>
+                 </depends>    
+					<validate>validate-email</validate>
+                <label>Email CC To</label>	
+            </field>  
+     </group>      
+	</section>    
+   </system>
+</config>

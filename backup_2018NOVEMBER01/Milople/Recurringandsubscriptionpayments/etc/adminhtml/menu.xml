@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<!--
+/**
+*
+* Do not edit or add to this file if you wish to upgrade the module to newer
+* versions in the future. If you wish to customize the module for your
+* needs please contact us to https://www.milople.com/contact-us.html
+*
+* @category    Ecommerce
+* @package     Milople_Recurringandsubscriptionpayments
+* @copyright   Copyright (c) 2017 Milople Technologies Pvt. Ltd. All Rights Reserved.
+* @url         https://www.milople.com/magento2-extensions/ecurring-and-subscription-payments-m2.html
+*
+**/
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+		<add id="Milople_Recurringandsubscriptionpayments::view" title="Recurring and Subscription Payments" module="Milople_Recurringandsubscriptionpayments" sortOrder="60" resource="Milople_Recurringandsubscriptionpayments::view" parent="Milople_All::all"/>
+		<!-- following row for add a menu option in new created menu tab -->
+    <add id="Milople_Recurringandsubscriptionpayments::plans" title="Manage Plans" module="Milople_Recurringandsubscriptionpayments" sortOrder="10" parent="Milople_Recurringandsubscriptionpayments::view" action="recurringandsubscriptionpayments/plans" resource="Milople_Recurringandsubscriptionpayments::plans"/>
+		<add id="Milople_Recurringandsubscriptionpayments::subscription" title="Manage Subscriptions" module="Milople_Recurringandsubscriptionpayments" sortOrder="11" parent="Milople_Recurringandsubscriptionpayments::view" action="recurringandsubscriptionpayments/subscription" resource="Milople_Recurringandsubscriptionpayments::subscription"/>
+		<add id="Milople_Recurringandsubscriptionpayments::configuration" title="Configuration" module="Milople_Recurringandsubscriptionpayments" sortOrder="12" parent="Milople_Recurringandsubscriptionpayments::view" action="adminhtml/system_config/edit/section/recurringandsubscription" resource="Milople_Recurringandsubscriptionpayments::config"/>
+    </menu>
+</config>
+
+

@@ -1,0 +1,26 @@
+{
+    "name": "milople/recurringandsubscriptionpayments",
+   "description": "Magento 2 store owners can offer subscription on their product",
+	  "type": "magento2-module",
+	  "version": "2.0.0",
+	  "authors": [
+	    {
+	      "name": "Milople",
+	      "email": "magento@milople.com"
+	    }
+	  ],
+	  "license": [
+	    "OSL-3.0"
+	  ],
+	  "require": {
+	    "php": "~5.5.0|~5.6.0|~7.0.0"
+		},
+	  "autoload": {
+	    "files": [
+	      "registration.php"
+	    ],
+	    "psr-4": {
+	      "Milople\\Recurringandsubscriptionpayments\\": ""
+	    }
+	  }
+}

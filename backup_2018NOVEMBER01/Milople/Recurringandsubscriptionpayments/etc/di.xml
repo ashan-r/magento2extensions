@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../../../lib/internal/Magento/Framework/ObjectManager/etc/config.xsd">
+	<type name="Magento\Quote\Model\Quote\Item\ToOrderItem">
+	  <plugin name="Milople_Recurringandsubscriptionpayments_Sales_Quote_Item_ToOrderItem" type="Milople\Recurringandsubscriptionpayments\Plugin\QuoteItemToOrderItemPlugin" />
+	 </type>
+	  <preference for="Magento\Paypal\Model\Express" type="Milople\Recurringandsubscriptionpayments\Model\Payment\Method\Express"/>
+ 	 <preference for="Magento\Paypal\Model\Api\Nvp" type="Milople\Recurringandsubscriptionpayments\Model\Payment\Method\Paypal\Api\Nvp"/>
+ 	 
+	 <preference for="Magento\Sales\Model\AdminOrder\Create" type="Milople\Recurringandsubscriptionpayments\Observer\Admin\Create" />
+</config>	 

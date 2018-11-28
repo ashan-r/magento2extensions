@@ -1,0 +1,70 @@
+<?php
+/**
+*
+* Do not edit or add to this file if you wish to upgrade the module to newer
+* versions in the future. If you wish to customize the module for your
+* needs please contact us to https://www.milople.com/contact-us.html
+*
+* @category    Ecommerce
+* @package     Milople_Recurringandsubscriptionpayments
+* @copyright   Copyright (c) 2017 Milople Technologies Pvt. Ltd. All Rights Reserved.
+* @url         https://www.milople.com/magento2-extensions/ecurring-and-subscription-payments-m2.html
+*
+**/
+$terms = $this->getTerm();
+$order = $this->getOrder();
+$plan =  $this->getPlan(); 
+$currenct_customer = $this->getCustomer()->getId();
+if($this->getSubscription()->getCustomerId() == $currenct_customer ): ?>
+	<div class="page-head">
+		<h3><?php echo __('Subscription Payments') ?></h3>
+	</div>
+	<?php if ($this->getCollection()->count()): ?>
+		<table class="data table" id="customer-subscriptions-history-table" cellspacing="0">
+			<thead>
+				<tr>
+					<th><?php echo __('Payment Date') ?></th>
+					<th><?php echo __('Order ID') ?></th>
+					<th><?php echo __('Order Status') ?></th>
+					<th class="a-right"><?php echo __('Order Amount') ?></th>
+
+				</tr>
+			</thead>
+			<tbody>
+		     <?php foreach ($this->getCollection() as $Item): ?>
+    			<tr>    
+					<td><?php echo date("m/d/y" ,strtotime($Item->getDate()));?></td>
+					<td>
+						<a href="<?php echo $block->getUrl('sales/order/view', array('order_id' => $Item->getOrder()->getId()))?>">
+							<?php echo $Item->getOrder()->getRealOrderId();?>
+						</a>
+					</td>
+					<td><em><?php echo ($Item->getOrder()->getStatusLabel()) ?></em></td>
+					<td class="a-right">
+					<?php $grandtotal = $Item->getOrder()->getGrandTotal();		 ?>
+					<?php if($grandtotal != 0):
+							echo  $Item->getOrder()->formatPrice($grandtotal);
+						   endif ;  ?></td>
+    			</tr>
+        <?php endforeach; ?>
+    </tbody>
+</table>
+	<?php endif; ?>
+
+<div class="button-set">
+    <a href="<?php echo $block->getUrl('*/*/subscription') ?>" class="left">&laquo; <?php echo __('Back') ?></a>
+</div>
+<?php else: ?>
+<script>
+require([
+	"jquery",
+	"mage/mage"
+], function($){
+
+   	$($.mage.redirect("<?php /* @escapeNotVerified */ echo $block->getUrl('customer/account/login'); ?>", "assign",0));
+
+});
+</script>
+<?php endif; ?>
+
+
